@@ -1,6 +1,7 @@
 package com.grey.virtualfais;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -13,6 +14,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         image = findViewById(R.id.image);
-        image_mask = findViewById(R.id.image_areas);
+        Intent intent = new Intent( MainActivity.this, MapView.class );
+        startActivity( intent );
     }
+
+
 }
