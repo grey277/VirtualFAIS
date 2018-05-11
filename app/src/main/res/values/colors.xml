@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#f43f3fbf</color>
+    <color name="colorPrimaryDark">#f43f3fbf</color>
     <color name="colorAccent">#FF4081</color>
+
+
+    <color name="white">#ffffff</color>
+    <color name="light_gray">#e7e7e8</color>
+    <color name="gray">#d1d2d4</color>
+    <color name="dark_gray">#58585a</color>
+    <color name="black">#000000</color>
+    <color name="black75">#bf000000</color>
+    <color name="black50">#7f000000</color>
+    <color name="black25">#3f000000</color>
+    <color name="black10">#1a000000</color>
+    <color name="transparent">#00000000</color>
+
+    <!--_____Toolbar_____-->
+    <color name="toolbar_background_color">#f43f3fbf</color>
+    <color name="toolbar_title_color">@color/white</color>
+    <color name="toolbar_subtitle_color">@color/gray</color>
+
+    <!--_____Drawer_____-->
+    <color name="drawer_background_color">@color/white</color>
+    <color name="drawer_text_color">@color/dark_gray</color>
 </resources>
