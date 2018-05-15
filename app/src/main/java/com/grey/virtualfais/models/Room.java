@@ -14,8 +14,12 @@ public class Room {
 
     private int floor;
 
-    public Room(String id, int floor) {
+    private int color;
+
+    public Room(String id, int floor, int color) {
         this.id = id;
+        this.floor = floor;
+        this.color = color;
     }
 
     public String getId() {
@@ -25,6 +29,8 @@ public class Room {
     public int getFloor() {
         return floor;
     }
+
+    public int getColor() { return color; }
 
     @Override
     public boolean equals(Object o) {
