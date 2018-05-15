@@ -48,9 +48,12 @@ public class RoomDaoTest {
 
         // when
         List<Room> allRooms = roomDao.getAll();
+        Room room = allRooms.get(0);
 
         // then
         assertThat(allRooms).containsOnly(A_1_06);
+        assertThat(room.getId()).isEqualTo("A-1-06");
+        assertThat(room.getFloor()).isEqualTo(1);
     }
 
     @Test

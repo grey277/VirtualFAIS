@@ -16,6 +16,7 @@ public class Room {
 
     public Room(String id, int floor) {
         this.id = id;
+        this.floor = floor;
     }
 
     public String getId() {
