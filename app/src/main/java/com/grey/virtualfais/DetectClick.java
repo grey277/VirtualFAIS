@@ -1,22 +1,23 @@
 package com.grey.virtualfais;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Log;
 
+import com.grey.virtualfais.daos.RoomDao;
 import com.grey.virtualfais.models.Room;
+import com.grey.virtualfais.services.AppDatabase;
 
-import java.util.LinkedList;
-import java.util.List;
-
-public class DetectClik {
+public class DetectClick {
 
     private Bitmap mask;
-    private List<Room> rooms = new LinkedList<>();
+    static private RoomDao roomDao;
 
     //TODO set rooms list
-    DetectClik(Resources res)
+    DetectClick(Resources res, Context context)//getApplicationContext() //getResources()
     {
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inTargetDensity = 1;
@@ -24,26 +25,18 @@ public class DetectClik {
         bitmapOptions.inDither = false;
         bitmapOptions.inScaled = false;
         bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        mask = BitmapFactory.decodeResource(res, R.drawable.maskaParter, bitmapOptions);
+        mask = BitmapFactory.decodeResource(res, R.drawable.maska_parter, bitmapOptions);
+        AppDatabase appDatabase = AppDatabase.getInstance(context);
+
+        roomDao = appDatabase.roomDao();
     }
 
     private int getColor(int x, int y) {
         return mask.getPixel(x, y);
     }
 
-    private boolean isClose(int color1, int color2, int tolerance) {
-        if(Math.abs(Color.red(color1) - Color.red(color2)) > tolerance)
-            return false;
-        if(Math.abs(Color.green(color1) - Color.green(color2)) > tolerance)
-            return false;
-        if(Math.abs(Color.blue(color1) - Color.blue(color2)) > tolerance)
-            return false;
-
-        return true;
-    }
-
     /**
-     * Returns ID of closest clicked room.
+     * Returns Room of closest clicked room.
      *
      * @param x global from top-left x-position of click
      * @param y global from top-left y-position of click
@@ -51,27 +44,23 @@ public class DetectClik {
      *
      * @return closest Room ID to clicked position, or null if not found any.
      */
-    public String getClosestRoomID(int x, int y, int minDiff) {
+    public Room getClosestRoom(int x, int y, int minDiff) {
         int color = getColor(x, y);
-        for(Room room : rooms) {
-            if(isClose(color, room.getColor(), minDiff)) {
-                return room.getId();
-            }
-        }
-        return null;
+        Log.d("DetectClick", "Clicked on color: " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " x/y: " + x + " " + y);
+        return roomDao.getClosestByColor(Color.red(color), Color.green(color), Color.blue(color), minDiff);
     }
 
     /**
-     * Returns ID of closest clicked room, default minDiff is set to 13.
+     * Returns Room of closest clicked room, default minDiff is set to 13.
      *
      * @param x global from top-left x-position of click
      * @param y global from top-left y-position of click
      *
      * @return closest Room ID to clicked position, or null if not found any.
      */
-    public String getClosestRoomID(int x, int y)
+    public Room getClosestRoom(int x, int y)
     {
-        return getClosestRoomID(x, y, 13);
+        return getClosestRoom(x, y, 13);
     }
 
 }

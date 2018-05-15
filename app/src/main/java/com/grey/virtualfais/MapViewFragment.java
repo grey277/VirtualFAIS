@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.util.Log;
 
+import com.grey.virtualfais.models.Room;
 import com.qozix.tileview.TileView;
 import com.qozix.tileview.hotspots.HotSpot;
 
@@ -12,7 +13,9 @@ public class MapViewFragment extends TileViewFragment {
     @Override
     public void setupViews() {
         super.setupViews();
-
+        UpdateDatabase updateDatabase = new UpdateDatabase(getActivity().getApplicationContext());
+        updateDatabase.testInsertRoom();
+        DetectClick detectClick = new DetectClick(getResources(), getActivity().getApplicationContext());
         // multiple references
         TileView tileView = getTileView();
         HotSpot hotSpot = new HotSpot();
@@ -21,10 +24,13 @@ public class MapViewFragment extends TileViewFragment {
         hotSpot.setHotSpotTapListener(new HotSpot.HotSpotTapListener(){
             @Override
             public void onHotSpotTap(HotSpot hotSpot, int x, int y) {
+                int scaledX = (int) (x / tileView.getScale());
+                int scaledY = (int) (y / tileView.getScale());
+                Room r = detectClick.getClosestRoom(scaledX, scaledY);
                 startActivity(new Intent(getActivity(), PopupActivity.class));
 
-                String activity = (String) hotSpot.getTag();
-                Log.d( "HotSpotTapped", "With access through the tag API to the Activity " + activity );
+                if(r != null)
+                    Log.d( "HotSpotTapped", "With access through the tag API to the Activity " + r.getId() );
             }
         });
         tileView.addHotSpot(hotSpot);
@@ -42,6 +48,7 @@ public class MapViewFragment extends TileViewFragment {
 
         // set mScale to 0, but keep scaleToFit true, so it'll be as small as possible but still match the container
         tileView.setScale( 0 );
+
 
         // let's use 0-1 positioning...
         tileView.defineBounds( 0, 0, 1, 1 );

@@ -19,7 +19,7 @@ public interface RoomDao {
     @Query("SELECT * FROM rooms")
     List<Room> getAll();
 
-    @Query("SELECT rooms.id, rooms.floor FROM rooms INNER JOIN employees " +
+    @Query("SELECT rooms.id, rooms.floor, rooms.colorRed, rooms.colorGreen, rooms.colorBlue FROM rooms INNER JOIN employees " +
             "ON rooms.id = employees.roomId " +
             "WHERE rooms.id = employees.roomId " +
             "AND employees.id = :employeeId " +
@@ -27,5 +27,11 @@ public interface RoomDao {
     Room getByEmployeeId(long employeeId);
 
     @Query("SELECT * FROM rooms WHERE rooms.id =:id ")
-    Room get(String id);
+    Room getByRoomID(String id);
+
+    @Query("SELECT * FROM rooms WHERE " +
+            "ABS(rooms.colorRed - :colorRed) <= :diff AND " +
+            "ABS(rooms.colorGreen - :colorGreen) <= :diff AND " +
+            "ABS(rooms.colorBlue - :colorBlue) <= :diff LIMIT 1")
+    Room getClosestByColor(int colorRed, int colorGreen, int colorBlue, int diff);
 }

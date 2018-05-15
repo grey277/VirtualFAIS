@@ -1,6 +1,7 @@
 package com.grey.virtualfais.daos;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -43,7 +44,7 @@ public class RoomDaoTest {
     @Test
     public void shouldInsertRoom() {
         // given
-        Room A_1_06 = new Room("A-1-06", 1);
+        Room A_1_06 = new Room("A-1-06", 1, 255, 0, 0);
         roomDao.insert(A_1_06);
 
         // when
@@ -59,8 +60,8 @@ public class RoomDaoTest {
     @Test
     public void shouldInsertMultipleRooms() {
         // given
-        Room A_1_06 = new Room("A-1-06", 1);
-        Room H_2_22 = new Room("H-2-22", 2);
+        Room A_1_06 = new Room("A-1-06", 1, 255, 0, 0);
+        Room H_2_22 = new Room("H-2-22", 2, 0, 0, 255);
 
         roomDao.insert(A_1_06, H_2_22);
 
@@ -74,7 +75,7 @@ public class RoomDaoTest {
     @Test
     public void shouldSearchByEmployeeId() {
         // given
-        Room A_1_06 = new Room("A-1-06", 1);
+        Room A_1_06 = new Room("A-1-06", 1, 255, 0, 0);
         Employee A_1_06_employee = EmployeeFactory.createEmployee("Jan", "Kowalski", A_1_06.getId());
 
         roomDao.insert(A_1_06);
@@ -85,5 +86,17 @@ public class RoomDaoTest {
 
         // then
         assertThat(room).isEqualTo(A_1_06);
+    }
+
+    @Test
+    public void getRoomByColor() {
+        Room A_1_06 = new Room("A-1-06", 1, 255, 0, 0);
+        roomDao.insert(A_1_06);
+        Room room = roomDao.getClosestByColor(255, 0, 0, 13);
+        assertThat(room).isEqualTo(A_1_06);
+        assertThat(room.getId()).isEqualTo(A_1_06.getId());
+        Room room2 = roomDao.getClosestByColor(242, 0, 0, 13);
+        assertThat(room2).isEqualTo(A_1_06);
+        assertThat(room2.getId()).isEqualTo(A_1_06.getId());
     }
 }
