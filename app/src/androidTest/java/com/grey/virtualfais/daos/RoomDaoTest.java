@@ -1,14 +1,11 @@
 package com.grey.virtualfais.daos;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.grey.virtualfais.helpers.EmployeeFactory;
-import com.grey.virtualfais.models.Department;
 import com.grey.virtualfais.models.Employee;
-import com.grey.virtualfais.models.Name;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.AppDatabase;
 
@@ -92,10 +89,10 @@ public class RoomDaoTest {
     public void getRoomByColor() {
         Room A_1_06 = new Room("A-1-06", 1, 255, 0, 0);
         roomDao.insert(A_1_06);
-        Room room = roomDao.getClosestByColor(255, 0, 0, 13);
+        Room room = roomDao.getByColor(255, 0, 0, 13);
         assertThat(room).isEqualTo(A_1_06);
         assertThat(room.getId()).isEqualTo(A_1_06.getId());
-        Room room2 = roomDao.getClosestByColor(242, 0, 0, 13);
+        Room room2 = roomDao.getByColor(242, 0, 0, 13);
         assertThat(room2).isEqualTo(A_1_06);
         assertThat(room2.getId()).isEqualTo(A_1_06.getId());
     }

@@ -13,5 +13,6 @@ public class PopupActivity extends Activity {
         setContentView(R.layout.popup);
 
         getWindow().setLayout(200, 300);
+        String room_id = getIntent().getStringExtra("room_id");
     }
 }

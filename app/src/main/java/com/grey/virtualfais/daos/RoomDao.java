@@ -27,11 +27,11 @@ public interface RoomDao {
     Room getByEmployeeId(long employeeId);
 
     @Query("SELECT * FROM rooms WHERE rooms.id =:id ")
-    Room getByRoomID(String id);
+    Room getByRoomId(String id);
 
     @Query("SELECT * FROM rooms WHERE " +
             "ABS(rooms.colorRed - :colorRed) <= :diff AND " +
             "ABS(rooms.colorGreen - :colorGreen) <= :diff AND " +
             "ABS(rooms.colorBlue - :colorBlue) <= :diff LIMIT 1")
-    Room getClosestByColor(int colorRed, int colorGreen, int colorBlue, int diff);
+    Room getByColor(int colorRed, int colorGreen, int colorBlue, int diff);
 }

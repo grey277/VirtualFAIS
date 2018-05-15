@@ -19,7 +19,7 @@ public class UpdateDatabase {
 
     public void testInsertRoom() {
         int color = Color.parseColor("#000014");
-        if(roomDao.getByRoomID("J-0-17") == null)
+        if(roomDao.getByRoomId("J-0-17") == null)
             roomDao.insert(new Room("J-0-17", 0, Color.red(color), Color.green(color), Color.blue(color)));
     }
 }

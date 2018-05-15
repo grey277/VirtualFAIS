@@ -16,21 +16,22 @@ public class MapViewFragment extends TileViewFragment {
         UpdateDatabase updateDatabase = new UpdateDatabase(getActivity().getApplicationContext());
         updateDatabase.testInsertRoom();
         DetectClick detectClick = new DetectClick(getResources(), getActivity().getApplicationContext());
+        int imagePlanWidth = 9963;
+        int imagePlanHeight = 6409;
         // multiple references
         TileView tileView = getTileView();
         HotSpot hotSpot = new HotSpot();
-        hotSpot.setTag( "test" );
-        hotSpot.set( new Rect( 0, 0, 9963, 6409 ) );
-        hotSpot.setHotSpotTapListener(new HotSpot.HotSpotTapListener(){
-            @Override
-            public void onHotSpotTap(HotSpot hotSpot, int x, int y) {
-                int scaledX = (int) (x / tileView.getScale());
-                int scaledY = (int) (y / tileView.getScale());
-                Room r = detectClick.getClosestRoom(scaledX, scaledY);
-                startActivity(new Intent(getActivity(), PopupActivity.class));
+        hotSpot.set( new Rect( 0, 0, imagePlanWidth, imagePlanHeight ) );
+        hotSpot.setHotSpotTapListener((hotSpot1, x, y) -> {
+            int scaledX = (int) (x / tileView.getScale());
+            int scaledY = (int) (y / tileView.getScale());
+            Room r = detectClick.getClosestRoom(scaledX, scaledY);
 
-                if(r != null)
-                    Log.d( "HotSpotTapped", "With access through the tag API to the Activity " + r.getId() );
+            if(r != null) {
+                Log.d("HotSpotTapped", "With access through the tag API to the Activity " + r.getId());
+                Intent i = new Intent(getActivity(), PopupActivity.class);
+                i.putExtra("room_id", r.getId());
+                startActivity(i);
             }
         });
         tileView.addHotSpot(hotSpot);
@@ -38,7 +39,7 @@ public class MapViewFragment extends TileViewFragment {
         tileView.setScaleLimits( 0, 2 );
 
         // size of original image at 100% mScale
-        tileView.setSize( 9963, 6409 );
+        tileView.setSize( imagePlanWidth, imagePlanHeight );
 
         // detail levels
         tileView.addDetailLevel( 1.000f, "tiles/image/1000/%d_%d.jpg");

@@ -35,32 +35,16 @@ public class DetectClick {
         return mask.getPixel(x, y);
     }
 
-    /**
-     * Returns Room of closest clicked room.
-     *
-     * @param x global from top-left x-position of click
-     * @param y global from top-left y-position of click
-     * @param minDiff minimal difference of color to treat as different(should be less then 14)
-     *
-     * @return closest Room ID to clicked position, or null if not found any.
-     */
     public Room getClosestRoom(int x, int y, int minDiff) {
         int color = getColor(x, y);
         Log.d("DetectClick", "Clicked on color: " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " x/y: " + x + " " + y);
-        return roomDao.getClosestByColor(Color.red(color), Color.green(color), Color.blue(color), minDiff);
+        return roomDao.getByColor(Color.red(color), Color.green(color), Color.blue(color), minDiff);
     }
 
-    /**
-     * Returns Room of closest clicked room, default minDiff is set to 13.
-     *
-     * @param x global from top-left x-position of click
-     * @param y global from top-left y-position of click
-     *
-     * @return closest Room ID to clicked position, or null if not found any.
-     */
     public Room getClosestRoom(int x, int y)
     {
-        return getClosestRoom(x, y, 13);
+        final int minimumDifferenceInColor = 13;
+        return getClosestRoom(x, y, minimumDifferenceInColor);
     }
 
 }
