@@ -1,11 +1,11 @@
 package com.grey.virtualfais;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.Intent;
+import android.graphics.Rect;
+import android.util.Log;
 
 import com.qozix.tileview.TileView;
+import com.qozix.tileview.hotspots.HotSpot;
 
 public class MapViewFragment extends TileViewFragment {
 
@@ -15,7 +15,19 @@ public class MapViewFragment extends TileViewFragment {
 
         // multiple references
         TileView tileView = getTileView();
+        HotSpot hotSpot = new HotSpot();
+        hotSpot.setTag( "test" );
+        hotSpot.set( new Rect( 0, 0, 9963, 6409 ) );
+        hotSpot.setHotSpotTapListener(new HotSpot.HotSpotTapListener(){
+            @Override
+            public void onHotSpotTap(HotSpot hotSpot, int x, int y) {
+                startActivity(new Intent(getActivity(), PopupActivity.class));
 
+                String activity = (String) hotSpot.getTag();
+                Log.d( "HotSpotTapped", "With access through the tag API to the Activity " + activity );
+            }
+        });
+        tileView.addHotSpot(hotSpot);
         // let the image explode
         tileView.setScaleLimits( 0, 2 );
 
@@ -42,5 +54,6 @@ public class MapViewFragment extends TileViewFragment {
 
         // disallow going back to minimum scale while double-taping at maximum scale (for demo purpose)
         tileView.setShouldLoopScale( false );
+
     }
 }
