@@ -17,6 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MapView" />
+        <activity android:name=".PopupActivity"
+            android:theme="@style/PopUp"
+            />
     </application>
 
 </manifest>

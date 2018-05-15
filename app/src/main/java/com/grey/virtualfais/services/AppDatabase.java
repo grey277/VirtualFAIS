@@ -24,7 +24,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static AppDatabase create(Context context) {
-        return databaseBuilder(context, AppDatabase.class, DB_NAME).build();
+        return databaseBuilder(context, AppDatabase.class, DB_NAME).allowMainThreadQueries().build();
     }
 
     public abstract EmployeeDao employeeDao();
