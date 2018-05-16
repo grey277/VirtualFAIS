@@ -9,7 +9,6 @@ import com.qozix.tileview.TileView;
 import com.qozix.tileview.hotspots.HotSpot;
 
 
-
 public class MapViewFragment extends TileViewFragment {
 
     @Override
@@ -20,8 +19,8 @@ public class MapViewFragment extends TileViewFragment {
         int imagePlanWidth = 9963;
         int imagePlanHeight = 6409;
         DetectClick detectClick = new DetectClick(getResources(), getActivity().getApplicationContext(), imagePlanWidth, imagePlanHeight);
-
         TileView tileView = getTileView();
+        PathDrawer pathDrawer = new PathDrawer(tileView);
         HotSpot hotSpot = new HotSpot();
         hotSpot.set( new Rect( 0, 0, imagePlanWidth, imagePlanHeight ) );
         hotSpot.setHotSpotTapListener((hotSpot1, x, y) -> {
@@ -30,12 +29,20 @@ public class MapViewFragment extends TileViewFragment {
             int scaledY = (int) (y / tileView.getScale());
             Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
             Room r = detectClick.getClosestRoom(scaledX, scaledY);
-
+            pathDrawer.clearPath();
             if(r != null) {
                 Log.d("HotSpotTapped", "With access through the tag API to the Activity " + r.getId());
                 Intent i = new Intent(getActivity(), PopupActivity.class);
                 i.putExtra("room_id", r.getId());
                 startActivity(i);
+                pathDrawer.newPath( 8489,  4811);
+                pathDrawer.nextPoint( 7670, 5527 );
+                pathDrawer.nextPoint( 7013, 5669 );
+                pathDrawer.nextPoint( 6199, 4049 );
+                pathDrawer.nextPoint( 3891, 2424 );
+                pathDrawer.nextPoint( 4129, 1732 );
+                pathDrawer.nextPoint( 2759, 761 );
+                pathDrawer.endPath();
             }
         });
 
