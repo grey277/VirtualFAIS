@@ -1,12 +1,17 @@
 package com.grey.virtualfais;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.grey.virtualfais.models.Room;
 import com.qozix.tileview.TileView;
 import com.qozix.tileview.hotspots.HotSpot;
+import com.qozix.tileview.paths.CompositePathView;
 
 public class MapViewFragment extends TileViewFragment {
 
@@ -15,16 +20,17 @@ public class MapViewFragment extends TileViewFragment {
         super.setupViews();
         UpdateDatabase updateDatabase = new UpdateDatabase(getActivity().getApplicationContext());
         updateDatabase.testInsertRoom();
-        DetectClick detectClick = new DetectClick(getResources(), getActivity().getApplicationContext());
         int imagePlanWidth = 9963;
         int imagePlanHeight = 6409;
-        // multiple references
+        DetectClick detectClick = new DetectClick(getResources(), getActivity().getApplicationContext(), imagePlanWidth, imagePlanHeight);
         TileView tileView = getTileView();
         HotSpot hotSpot = new HotSpot();
         hotSpot.set( new Rect( 0, 0, imagePlanWidth, imagePlanHeight ) );
         hotSpot.setHotSpotTapListener((hotSpot1, x, y) -> {
+            Log.d("HotSpot", "X/Y " + x + " " + y);
             int scaledX = (int) (x / tileView.getScale());
             int scaledY = (int) (y / tileView.getScale());
+            Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
             Room r = detectClick.getClosestRoom(scaledX, scaledY);
 
             if(r != null) {
@@ -35,6 +41,7 @@ public class MapViewFragment extends TileViewFragment {
             }
         });
         tileView.addHotSpot(hotSpot);
+
         // let the image explode
         tileView.setScaleLimits( 0, 2 );
 
@@ -62,6 +69,5 @@ public class MapViewFragment extends TileViewFragment {
 
         // disallow going back to minimum scale while double-taping at maximum scale (for demo purpose)
         tileView.setShouldLoopScale( false );
-
     }
 }
