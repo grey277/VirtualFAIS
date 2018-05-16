@@ -9,4 +9,8 @@
 
     <string name="navigation_drawer_open">Otwórz menu boczne</string>
     <string name="navigation_drawer_close">Zamknij menu boczne</string>
+    <string name="sala">Sala</string>
+    <string name="telefon">Telefon</string>
+    <string name="pracownicy">Pracownicy:</string>
+
 </resources>

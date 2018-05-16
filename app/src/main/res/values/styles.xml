@@ -21,6 +21,10 @@
     <style name="PopUp" >
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
+
+        <!-- hides top bar in popup -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
     </style>
 
 </resources>

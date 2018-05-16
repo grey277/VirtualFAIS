@@ -3,6 +3,7 @@ package com.grey.virtualfais;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 
 import com.grey.virtualfais.daos.RoomDao;
 import com.grey.virtualfais.models.Room;
@@ -18,7 +19,14 @@ public class PopupActivity extends Activity {
 
         setContentView(R.layout.popup);
 
-        getWindow().setLayout(200, 300);
+        // setting popup window size according to device screen size
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        getWindow().setLayout((int)(width*.75), (int)(height*.75));
+
         String room_id = getIntent().getStringExtra("room_id");
         AppDatabase appDatabase = AppDatabase.getInstance(this);
 
