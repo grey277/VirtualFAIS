@@ -1,17 +1,14 @@
 package com.grey.virtualfais;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.grey.virtualfais.models.Room;
 import com.qozix.tileview.TileView;
 import com.qozix.tileview.hotspots.HotSpot;
-import com.qozix.tileview.paths.CompositePathView;
+
+
 
 public class MapViewFragment extends TileViewFragment {
 
@@ -23,6 +20,7 @@ public class MapViewFragment extends TileViewFragment {
         int imagePlanWidth = 9963;
         int imagePlanHeight = 6409;
         DetectClick detectClick = new DetectClick(getResources(), getActivity().getApplicationContext(), imagePlanWidth, imagePlanHeight);
+
         TileView tileView = getTileView();
         HotSpot hotSpot = new HotSpot();
         hotSpot.set( new Rect( 0, 0, imagePlanWidth, imagePlanHeight ) );
@@ -40,8 +38,8 @@ public class MapViewFragment extends TileViewFragment {
                 startActivity(i);
             }
         });
-        tileView.addHotSpot(hotSpot);
 
+        tileView.addHotSpot(hotSpot);
         // let the image explode
         tileView.setScaleLimits( 0, 2 );
 
@@ -69,5 +67,6 @@ public class MapViewFragment extends TileViewFragment {
 
         // disallow going back to minimum scale while double-taping at maximum scale (for demo purpose)
         tileView.setShouldLoopScale( false );
+
     }
 }

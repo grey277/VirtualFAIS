@@ -7,8 +7,7 @@ More info: https://developer.android.com/training/data-storage/room/
 
 Example:
 ```java
-AppDatabase appDatabase = android.arch.persistence.room.Room.databaseBuilder(
-        getApplicationContext(), AppDatabase.class, "fileName.sqlite").build();
+AppDatabase appDatabase = AppDatabase.getInstance(getApplicationContext());
 
 EmployeeDao employeeDao = appDatabase.employeeDao();
 RoomDao roomDao = appDatabase.roomDao();

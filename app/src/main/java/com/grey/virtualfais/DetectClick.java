@@ -33,6 +33,7 @@ public class DetectClick {
         roomDao = appDatabase.roomDao();
     }
 
+
     private Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
                                                          int reqWidth, int reqHeight) {
 
