@@ -3,25 +3,43 @@ package com.grey.virtualfais;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.grey.virtualfais.daos.LastupdateDao;
 import com.grey.virtualfais.daos.RoomDao;
+import com.grey.virtualfais.models.Lastupdate;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.AppDatabase;
 
 public class UpdateDatabase {
 
     static private RoomDao roomDao;
+    static private LastupdateDao lastupdateDao;
+
+    static private final long updateID = 1233215596L;
 
     UpdateDatabase(Context context) {
         AppDatabase appDatabase = AppDatabase.getInstance(context);
 
         roomDao = appDatabase.roomDao();
+        lastupdateDao = appDatabase.lastupdateDao();
+        checkDatabase();
     }
 
-    public void testInsertRoom() {
+    private void checkDatabase() {
+        Lastupdate lastupdate = lastupdateDao.get();
+        if(lastupdate != null) {
+            if(lastupdate.getId() != updateID) {
+                roomDao.deleteAllRecords();
+                insertRooms();
+            }
+        } else {
+            Lastupdate last = new Lastupdate(updateID);
+            lastupdateDao.insert(last);
+            insertRooms();
+        }
+    }
+
+    private void insertRooms() {
         int color = Color.parseColor("#000014");
-        if(roomDao.getByRoomId("J-0-17") == null)
-            roomDao.insert(new Room("J-0-17", 0, Color.red(color), Color.green(color), Color.blue(color)));
-        color = Color.parseColor("#000014");
         roomDao.insert(new Room("J-0-17", 0, Color.red(color), Color.green(color), Color.blue(color)));
         color = Color.parseColor("#000028");
         roomDao.insert(new Room("J-0-15", 0, Color.red(color), Color.green(color), Color.blue(color)));
@@ -871,14 +889,6 @@ public class UpdateDatabase {
         color = Color.parseColor("#287850");
         roomDao.insert(new Room("H-2-12", 2, Color.red(color), Color.green(color), Color.blue(color)));
         color = Color.parseColor("#287864");
-        roomDao.insert(new Room("A-1-03", 2, Color.red(color), Color.green(color), Color.blue(color)));
-        color = Color.parseColor("#287878");
-        roomDao.insert(new Room("A-1-06", 2, Color.red(color), Color.green(color), Color.blue(color)));
-        color = Color.parseColor("#28788c");
-        roomDao.insert(new Room("A-1-13", 2, Color.red(color), Color.green(color), Color.blue(color)));
-        color = Color.parseColor("#2878a0");
-        roomDao.insert(new Room("A-1-08", 2, Color.red(color), Color.green(color), Color.blue(color)));
-        color = Color.parseColor("#2878b4");
         roomDao.insert(new Room("A-2-01", 2, Color.red(color), Color.green(color), Color.blue(color)));
         color = Color.parseColor("#2878c8");
         roomDao.insert(new Room("A-2-02", 2, Color.red(color), Color.green(color), Color.blue(color)));
