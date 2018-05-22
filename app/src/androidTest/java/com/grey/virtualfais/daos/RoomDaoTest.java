@@ -96,4 +96,15 @@ public class RoomDaoTest {
         assertThat(room2).isEqualTo(A_1_06);
         assertThat(room2.getId()).isEqualTo(A_1_06.getId());
     }
+
+    @Test
+    public void deleteAllRooms() {
+        Room A_1_06 = new Room("A-1-06", 1, 255, 0, 0);
+        roomDao.insert(A_1_06);
+        List<Room> room = roomDao.getAll();
+        assertThat(room.size()).isEqualTo(1);
+        roomDao.deleteAllRecords();
+        room = roomDao.getAll();
+        assertThat(room.size()).isEqualTo(0);
+    }
 }

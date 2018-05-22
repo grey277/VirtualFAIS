@@ -34,4 +34,7 @@ public interface RoomDao {
             "ABS(rooms.colorGreen - :colorGreen) <= :diff AND " +
             "ABS(rooms.colorBlue - :colorBlue) <= :diff LIMIT 1")
     Room getByColor(int colorRed, int colorGreen, int colorBlue, int diff);
+
+    @Query("DELETE FROM rooms")
+    void deleteAllRecords();
 }
