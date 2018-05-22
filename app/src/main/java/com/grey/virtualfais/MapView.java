@@ -21,10 +21,10 @@ public class MapView extends TileViewActivity {
         tileView.setSize( 9963, 6409 );
 
         // detail levels
-        tileView.addDetailLevel( 1.000f, "tiles/image/1000/%d_%d.jpg");
-        tileView.addDetailLevel( 0.500f, "tiles/image/500/%d_%d.jpg");
-        tileView.addDetailLevel( 0.250f, "tiles/image/250/%d_%d.jpg");
-        tileView.addDetailLevel( 0.125f, "tiles/image/125/%d_%d.jpg");
+        tileView.addDetailLevel( 1.000f, "parter/image/1000/%d_%d.jpg");
+        tileView.addDetailLevel( 0.500f, "parter/image/500/%d_%d.jpg");
+        tileView.addDetailLevel( 0.250f, "parter/image/250/%d_%d.jpg");
+        tileView.addDetailLevel( 0.125f, "parter/image/125/%d_%d.jpg");
 
         // set mScale to 0, but keep scaleToFit true, so it'll be as small as possible but still match the container
         tileView.setScale( 0 );
