@@ -14,23 +14,23 @@ import com.grey.virtualfais.services.AppDatabase;
 public class DetectClick {
 
     private Bitmap mask;
+    private int currentLayer = 0;
     private float maskHeightScale = 1.f;
     private float maskWidthScale = 1.f;
 
-    static private RoomDao roomDao;
+    private RoomDao roomDao;
+    private Resources res;
+    private int mapWidth;
+    private int mapHeight;
 
-    DetectClick(Resources res, Context context, int maskWidth, int maskHeight)
+    DetectClick(Resources res, Context context, int mapWidth, int mapHeight)
     {
-        mask = decodeSampledBitmapFromResource(res, R.drawable.maska_parter, maskWidth, maskHeight);
-        final int height = mask.getHeight();
-        final int width = mask.getWidth();
-        Log.d("DetectClick", "Height: " + height + " width: " + width);
-        maskWidthScale = (float) width / (float) maskWidth;
-        maskHeightScale = (float) height / (float) maskHeight;
-
+        this.res = res;
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
         AppDatabase appDatabase = AppDatabase.getInstance(context);
-
         roomDao = appDatabase.roomDao();
+        loadMask(R.drawable.maska_parter);
     }
 
 
@@ -78,16 +78,47 @@ public class DetectClick {
         return mask.getPixel(rescaledX, rescaledY);
     }
 
-    public Room getClosestRoom(int x, int y, int minDiff) {
+    private void loadMask(int drawableID) {
+        mask = decodeSampledBitmapFromResource(res, drawableID, mapWidth / 2, mapHeight / 2);
+        final int height = mask.getHeight();
+        final int width = mask.getWidth();
+        Log.d("DetectClick", "Height: " + height + " width: " + width);
+        maskWidthScale = (float) width / (float) mapWidth;
+        maskHeightScale = (float) height / (float) mapHeight;
+
+    }
+
+    private void changeLayerIfNeeded(int layer) {
+        switch(layer){
+            case 0: if(currentLayer != 0) {
+                mask.recycle();
+                loadMask(R.drawable.maska_parter);
+                currentLayer = 0;
+            } break;
+            case 1: if(currentLayer != 1) {
+                mask.recycle();
+                loadMask(R.drawable.pietro_1_maska);
+                currentLayer = 1;
+            } break;
+            case 2: if(currentLayer != 2) {
+                mask.recycle();
+                loadMask(R.drawable.pietro_2_maska);
+                currentLayer = 2;
+            }
+        }
+    }
+
+    public Room getClosestRoom(int x, int y, int minDiff, int layer) {
         int color = getColor(x, y);
         Log.d("DetectClick", "Clicked on color: " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " x/y: " + x + " " + y);
         return roomDao.getByColor(Color.red(color), Color.green(color), Color.blue(color), minDiff);
     }
 
-    public Room getClosestRoom(int x, int y)
+    public Room getClosestRoom(int x, int y, int layer)
     {
-        final int minimumDifferenceInColor = 13;
-        return getClosestRoom(x, y, minimumDifferenceInColor);
+        changeLayerIfNeeded(layer);
+        final int minimumDifferenceInColor = 8;
+        return getClosestRoom(x, y, minimumDifferenceInColor, layer);
     }
 
 }

@@ -15,7 +15,6 @@ public class MapViewFragment extends TileViewFragment {
     public void setupViews() {
         super.setupViews();
         UpdateDatabase updateDatabase = new UpdateDatabase(getActivity().getApplicationContext());
-        updateDatabase.testInsertRoom();
         int imagePlanWidth = 9963;
         int imagePlanHeight = 6409;
         DetectClick detectClick = new DetectClick(getResources(), getActivity().getApplicationContext(), imagePlanWidth, imagePlanHeight);
@@ -28,7 +27,7 @@ public class MapViewFragment extends TileViewFragment {
             int scaledX = (int) (x / tileView.getScale());
             int scaledY = (int) (y / tileView.getScale());
             Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
-            Room r = detectClick.getClosestRoom(scaledX, scaledY);
+            Room r = detectClick.getClosestRoom(scaledX, scaledY, 0);
             pathDrawer.clearPath();
             if(r != null) {
                 Log.d("HotSpotTapped", "With access through the tag API to the Activity " + r.getId());
