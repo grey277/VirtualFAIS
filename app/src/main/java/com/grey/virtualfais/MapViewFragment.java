@@ -1,5 +1,6 @@
 package com.grey.virtualfais;
 
+
 import android.content.Intent;
 import android.graphics.Rect;
 import android.util.Log;
@@ -7,7 +8,6 @@ import android.util.Log;
 import com.grey.virtualfais.models.Room;
 import com.qozix.tileview.TileView;
 import com.qozix.tileview.hotspots.HotSpot;
-
 
 public class MapViewFragment extends TileViewFragment {
 
@@ -62,7 +62,6 @@ public class MapViewFragment extends TileViewFragment {
         // set mScale to 0, but keep scaleToFit true, so it'll be as small as possible but still match the container
         tileView.setScale( 0 );
 
-
         // let's use 0-1 positioning...
         tileView.defineBounds( 0, 0, 1, 1 );
 
@@ -74,6 +73,5 @@ public class MapViewFragment extends TileViewFragment {
 
         // disallow going back to minimum scale while double-taping at maximum scale (for demo purpose)
         tileView.setShouldLoopScale( false );
-
     }
 }

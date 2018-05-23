@@ -1,33 +1,32 @@
-package com.grey.virtualfais.modules.contact;
+package com.grey.virtualfais.modules.search;
 
 
-import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 
 import com.grey.virtualfais.R;
 import com.grey.virtualfais.base.BaseFragment;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ContactFragment extends BaseFragment {
+import java.util.ArrayList;
+import java.util.List;
 
-    private TextView mailIcon;
 
-    public final static String TAG = "ContactFragment",
-            TITLE = "ContactFragment.TITLE",
-            SUBTITLE = "ContactFragment.SUBTITLE",
-            FONT = "fonts/mailsymbol.ttf";
+public class SearchFragment extends BaseFragment {
+
+    public final static String TAG = "SearchFragment",
+            TITLE = "SearchFragment.TITLE",
+            SUBTITLE = "SearchFragment.SUBTITLE";
     private String title, subtitle;
+    private AutoCompleteTextView autoCompleteTextView;
+    private Button navigate;
 
-    public static ContactFragment newInstance(String title, String subtitle) {
-        ContactFragment result = new ContactFragment();
+    public static SearchFragment newInstance(String title, String subtitle) {
+        SearchFragment result = new SearchFragment();
 
         Bundle bundle = new Bundle(2);
         bundle.putString(TITLE, title);
@@ -49,11 +48,10 @@ public class ContactFragment extends BaseFragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_contact, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         bind(view);
         setupViews();
@@ -62,15 +60,22 @@ public class ContactFragment extends BaseFragment {
     }
 
     private void bind(View view) {
-        mailIcon = view.findViewById(R.id.mail_icon);
+        autoCompleteTextView = view.findViewById(R.id.auto_text_view);
+        navigate = view.findViewById(R.id.confirm);
     }
 
     private void setupViews() {
-        Context ctx = getContext();
-        if (ctx != null) {
-            Typeface tf = Typeface.createFromAsset(ctx.getAssets(), FONT);
-            mailIcon.setTypeface(tf);
-        }
+        // TODO: pass catchword list
+        List<String> catchwordsList = new ArrayList<>();
+        catchwordsList.add("Test A");
+        catchwordsList.add("Test B");
+        ArrayAdapter adapter = new ArrayAdapter(getContext(), android.R.layout.select_dialog_item, catchwordsList);
+        autoCompleteTextView.setThreshold(1);
+        autoCompleteTextView.setAdapter(adapter);
+
+        navigate.setOnClickListener(v -> {
+            //TODO: make some action
+        });
     }
 
     @Override
@@ -93,5 +98,4 @@ public class ContactFragment extends BaseFragment {
     public boolean onBackPressed() {
         return super.onBackPressed();
     }
-
 }
