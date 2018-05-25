@@ -31,15 +31,15 @@ public class TileViewFragment extends BaseFragment {
          * It is retrieved from a resource value, but it can also be generated with
          * {@code View.generateViewId()}.
          */
-        tileView.setId( R.id.tileview_id );
-        tileView.setSaveEnabled( true );
-
         return tileView;
     }
 
     public void bind(View view) { }
 
-    public void setupViews() { }
+    public void setupViews() {
+        tileView.setId( R.id.tileview_id );
+        tileView.setSaveEnabled( true );
+    }
 
     @Override
     public void onPause() {
@@ -61,7 +61,13 @@ public class TileViewFragment extends BaseFragment {
     }
 
     public TileView getTileView(){
-        return tileView;
+        if (tileView != null) {
+            return tileView;
+        } else {
+            tileView = new TileView(getContext());
+            setupViews();
+            return tileView;
+        }
     }
 
     /**

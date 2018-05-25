@@ -24,6 +24,7 @@ import com.grey.virtualfais.base.OnFragmentBackOnScreen;
 import com.grey.virtualfais.modules.about.AboutFragment;
 import com.grey.virtualfais.modules.contact.ContactFragment;
 import com.grey.virtualfais.modules.help.HelpFragment;
+import com.grey.virtualfais.modules.search.SearchFragment;
 import com.grey.virtualfais.modules.update.UpdateFragment;
 
 public class MainActivity extends BaseActivity {
@@ -166,17 +167,19 @@ public class MainActivity extends BaseActivity {
         String title = currentFragment;
 
         if (title.equalsIgnoreCase(getString(R.string.nav_about_title))) {
-            attachFragment(AboutFragment.newInstance("O nas", "subtitle"), AboutFragment.TAG, true);
+            attachFragment(AboutFragment.newInstance(getString(R.string.nav_about_title), "subtitle"), AboutFragment.TAG, true);
 
         } else if (title.equalsIgnoreCase(getString(R.string.nav_contact_title))) {
-            attachFragment(ContactFragment.newInstance("Kontakt", "subtitle"), ContactFragment.TAG, true);
+            attachFragment(ContactFragment.newInstance(getString(R.string.nav_contact_title), "subtitle"), ContactFragment.TAG, true);
 
         } else if (title.equalsIgnoreCase(getString(R.string.nav_help_title))) {
-            attachFragment(HelpFragment.newInstance("Pomoc", "subtitle"), HelpFragment.TAG, true);
+            attachFragment(HelpFragment.newInstance(getString(R.string.nav_help_title), "subtitle"), HelpFragment.TAG, true);
 
         } else if (title.equalsIgnoreCase(getString(R.string.nav_update_title))) {
-            attachFragment(UpdateFragment.newInstance("Aktualizacja", "subtitle"), UpdateFragment.TAG, true);
+            attachFragment(UpdateFragment.newInstance(getString(R.string.nav_update_title), "subtitle"), UpdateFragment.TAG, true);
 
+        } else if (title.equalsIgnoreCase(getString(R.string.nav_search_title))) {
+            attachFragment(SearchFragment.newInstance(getString(R.string.nav_search_title), "subtitle"), SearchFragment.TAG, true);
         } else {
             attachFragment(MainFragment.newInstance(), MainFragment.TAG);
         }
