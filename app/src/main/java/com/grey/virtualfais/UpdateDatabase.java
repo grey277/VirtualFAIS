@@ -11,12 +11,14 @@ import com.grey.virtualfais.services.AppDatabase;
 
 public class UpdateDatabase {
 
-    static private RoomDao roomDao;
-    static private LastupdateDao lastupdateDao;
+    private static RoomDao roomDao;
+    private static LastupdateDao lastupdateDao;
 
-    static private final long updateID = 1233215596L;
+    private static final long updateID = 1233215596L;
 
-    UpdateDatabase(Context context) {
+    private UpdateDatabase(Context context) { }
+
+    public static void apply(Context context) {
         AppDatabase appDatabase = AppDatabase.getInstance(context);
 
         roomDao = appDatabase.roomDao();
@@ -24,7 +26,7 @@ public class UpdateDatabase {
         checkDatabase();
     }
 
-    private void checkDatabase() {
+    private static void checkDatabase() {
         Lastupdate lastupdate = lastupdateDao.get();
         if(lastupdate != null) {
             if(lastupdate.getId() != updateID) {
@@ -38,7 +40,7 @@ public class UpdateDatabase {
         }
     }
 
-    private void insertRooms() {
+    private static void insertRooms() {
         int color = Color.parseColor("#000014");
         roomDao.insert(new Room("J-0-17", 0, Color.red(color), Color.green(color), Color.blue(color)));
         color = Color.parseColor("#000028");

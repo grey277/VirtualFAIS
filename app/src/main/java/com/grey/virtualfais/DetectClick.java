@@ -8,34 +8,30 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.grey.virtualfais.daos.RoomDao;
+import com.grey.virtualfais.models.Level;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.AppDatabase;
 
 public class DetectClick {
 
     private Bitmap mask;
-    private int currentLayer = 0;
+    private Level level;
     private float maskHeightScale = 1.f;
     private float maskWidthScale = 1.f;
 
     private RoomDao roomDao;
     private Resources res;
-    private int mapWidth;
-    private int mapHeight;
 
-    DetectClick(Resources res, Context context, int mapWidth, int mapHeight)
-    {
+    DetectClick(Resources res, Context context, Level level) {
         this.res = res;
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
+        this.level = level;
         AppDatabase appDatabase = AppDatabase.getInstance(context);
         roomDao = appDatabase.roomDao();
-        loadMask(R.drawable.maska_parter);
+        loadMask(level.getMaskId());
     }
 
-
     private Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
+                                                   int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -79,46 +75,33 @@ public class DetectClick {
     }
 
     private void loadMask(int drawableID) {
-        mask = decodeSampledBitmapFromResource(res, drawableID, mapWidth / 2, mapHeight / 2);
+        mask = decodeSampledBitmapFromResource(res, drawableID, level.getPlanWidth() / 2, level.getPlanHeight() / 2);
         final int height = mask.getHeight();
         final int width = mask.getWidth();
         Log.d("DetectClick", "Height: " + height + " width: " + width);
-        maskWidthScale = (float) width / (float) mapWidth;
-        maskHeightScale = (float) height / (float) mapHeight;
+        maskWidthScale = (float) width / (float) level.getPlanWidth();
+        maskHeightScale = (float) height / (float) level.getPlanHeight();
 
     }
 
-    private void changeLayerIfNeeded(int layer) {
-        switch(layer){
-            case 0: if(currentLayer != 0) {
-                mask.recycle();
-                loadMask(R.drawable.maska_parter);
-                currentLayer = 0;
-            } break;
-            case 1: if(currentLayer != 1) {
-                mask.recycle();
-                loadMask(R.drawable.pietro_1_maska);
-                currentLayer = 1;
-            } break;
-            case 2: if(currentLayer != 2) {
-                mask.recycle();
-                loadMask(R.drawable.pietro_2_maska);
-                currentLayer = 2;
-            }
+    private void changeLayerIfNeeded(Level level) {
+        if (!this.level.equals(level)) {
+            mask.recycle();
+            loadMask(level.getMaskId());
+            this.level = level;
         }
     }
 
-    public Room getClosestRoom(int x, int y, int minDiff, int layer) {
+    public Room getClosestRoom(int x, int y, int minDiff) {
         int color = getColor(x, y);
         Log.d("DetectClick", "Clicked on color: " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " x/y: " + x + " " + y);
         return roomDao.getByColor(Color.red(color), Color.green(color), Color.blue(color), minDiff);
     }
 
-    public Room getClosestRoom(int x, int y, int layer)
-    {
-        changeLayerIfNeeded(layer);
+    public Room getClosestRoom(int x, int y, Level level) {
+        changeLayerIfNeeded(level);
         final int minimumDifferenceInColor = 8;
-        return getClosestRoom(x, y, minimumDifferenceInColor, layer);
+        return getClosestRoom(x, y, minimumDifferenceInColor);
     }
 
 }

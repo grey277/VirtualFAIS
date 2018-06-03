@@ -27,4 +27,12 @@
         <item name="android:windowActionBar">false</item>
     </style>
 
+    <declare-styleable name="BottomMenuItemStyle">
+        <attr format="string" name="title"/>
+        <attr format="reference" name="normalImage"/>
+        <attr format="reference" name="selectedImage"/>
+        <attr format="color" name="normalTitleColor"/>
+        <attr format="color" name="selectedTitleColor"/>
+    </declare-styleable>
+
 </resources>

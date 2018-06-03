@@ -1,10 +1,9 @@
 package com.grey.virtualfais;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,11 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.grey.virtualfais.base.BaseActivity;
 import com.grey.virtualfais.base.OnFragmentBackOnScreen;
+import com.grey.virtualfais.models.Level;
 import com.grey.virtualfais.modules.about.AboutFragment;
 import com.grey.virtualfais.modules.contact.ContactFragment;
 import com.grey.virtualfais.modules.help.HelpFragment;
@@ -37,6 +36,8 @@ public class MainActivity extends BaseActivity {
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
     private String currentFragment;
+    private BottomNavigationView bottomNavigation;
+    private Level currentLevel = Level.ZERO;
 
     public static boolean isBackFragment(Fragment fragment) {
         return (fragment instanceof OnFragmentBackOnScreen
@@ -46,12 +47,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        UpdateDatabase.apply(getApplicationContext());
+
         setContentView(R.layout.activity_main);
 
         image = findViewById(R.id.image);
-        //Use MainFagment
-//        Intent intent = new Intent( MainActivity.this, MapView.class );
-//        startActivity( intent );
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,10 +81,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                return false;
-        }
         return false;
     }
 
@@ -94,6 +91,7 @@ public class MainActivity extends BaseActivity {
     private void bind() {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+        bottomNavigation = findViewById(R.id.bottom_navigation);
     }
 
     private void setupViews() {
@@ -103,17 +101,31 @@ public class MainActivity extends BaseActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        performDrawerClick(item);
-                        return true;
-                    }
-                });
+        navigationView.setNavigationItemSelectedListener(item -> {
+            performDrawerClick(item);
+            return true;
+        });
 
-        attachFragment(MainFragment.newInstance(), MainFragment.TAG);
+
+        MainFragment fragment = getMainFragment();
+
+        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            performLevelChange(item.getItemId());
+            return true;
+        });
+
+        attachFragment(fragment, MainFragment.TAG);
     }
+
+    private MainFragment getMainFragment() {
+        MainFragment fragment = MainFragment.newInstance();
+
+        Bundle args = new Bundle();
+        args.putSerializable("level", currentLevel);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     public void enableArrow(boolean enable) {
 
@@ -126,13 +138,7 @@ public class MainActivity extends BaseActivity {
                 bar.setDisplayHomeAsUpEnabled(true);
             }
 
-            toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    onBackPressed();
-                }
-            });
+            toggle.setToolbarNavigationClickListener(v -> onBackPressed());
 
 
         } else {
@@ -148,18 +154,25 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void performLevelChange(int buttonLevelId) {
+        new Handler().post(() -> {
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment content = fm.findFragmentById(R.id.content);
+            if (content instanceof MapViewFragment) {
+                ((MapViewFragment) content).setLevel(Level.getByButtonId(buttonLevelId));
+            }
+        });
+    }
+
     private void performDrawerClick(final MenuItem item) {
 
         item.setChecked(true);
         currentFragment = item.getTitle().toString();
         runFragment();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                item.setChecked(false);
-                drawerLayout.closeDrawer(Gravity.START, true);
-            }
+        new Handler().postDelayed(() -> {
+            item.setChecked(false);
+            drawerLayout.closeDrawer(Gravity.START, true);
         }, 200);
     }
 
@@ -181,7 +194,7 @@ public class MainActivity extends BaseActivity {
         } else if (title.equalsIgnoreCase(getString(R.string.nav_search_title))) {
             attachFragment(SearchFragment.newInstance(getString(R.string.nav_search_title), "subtitle"), SearchFragment.TAG, true);
         } else {
-            attachFragment(MainFragment.newInstance(), MainFragment.TAG);
+            attachFragment(getMainFragment(), MainFragment.TAG);
         }
     }
 
@@ -212,7 +225,7 @@ public class MainActivity extends BaseActivity {
         Log.d("lastFragment", lastFragment == null ? "null" : lastFragment.getClass().getSimpleName());
 
         if (lastFragment != null && !isLastFragment(lastFragment)) {
-            attachFragment(MainFragment.newInstance(), MainFragment.TAG);
+            attachFragment(getMainFragment(), MainFragment.TAG);
             return;
         }
 

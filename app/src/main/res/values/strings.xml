@@ -14,6 +14,10 @@
     <string name="telefon">Telefon</string>
     <string name="pracownicy">Pracownicy:</string>
 
+    <string name="level_one">Poziom 1</string>
+    <string name="level_two">Poziom 2</string>
+    <string name="level_three">Poziom 3</string>
+
     <string name="contact_fragment_title">Wydział Fizyki, Astronomii i Informatyki Stosowanej</string>
     <string name="contact_fragment_adress_header">Adres:</string>
     <string name="contact_fragment_adress">ul. prof. Stanisława Łojasiewicza 11, 30-348 Kraków</string>

@@ -23,7 +23,6 @@ public class TileViewFragment extends BaseFragment {
 
         tileView = new TileView(getContext());
 
-        bind(tileView);
         setupViews();
 
         /**
@@ -34,7 +33,6 @@ public class TileViewFragment extends BaseFragment {
         return tileView;
     }
 
-    public void bind(View view) { }
 
     public void setupViews() {
         tileView.setId( R.id.tileview_id );
@@ -75,12 +73,7 @@ public class TileViewFragment extends BaseFragment {
      * see https://github.com/moagrius/TileView/wiki/FAQ
      */
     public void frameTo( final double x, final double y ) {
-        getTileView().post( new Runnable() {
-            @Override
-            public void run() {
-                getTileView().scrollToAndCenter( x, y );
-            }
-        });
+        getTileView().post(() -> getTileView().scrollToAndCenter( x, y ));
     }
 
     @Override

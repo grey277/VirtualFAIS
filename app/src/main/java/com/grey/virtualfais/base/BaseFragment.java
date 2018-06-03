@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.grey.virtualfais.MainActivity;
+import com.grey.virtualfais.R;
 
 
 public abstract class BaseFragment extends Fragment implements DrawerFragmentInterface, OnFragmentBackOnScreen {
@@ -96,6 +97,8 @@ public abstract class BaseFragment extends Fragment implements DrawerFragmentInt
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             MainActivity baseActivity = (MainActivity) getActivity();
             baseActivity.enableArrow(false);
+
+            setBottomMenuVisibility(View.VISIBLE);
         }
     }
 
@@ -103,6 +106,19 @@ public abstract class BaseFragment extends Fragment implements DrawerFragmentInt
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             MainActivity baseActivity = (MainActivity) getActivity();
             baseActivity.enableArrow(true);
+
+            setBottomMenuVisibility(View.GONE);
+        }
+    }
+
+    private void setBottomMenuVisibility(int visibility){
+        View view = getView();
+        if(view != null){
+            View rootView = view.getRootView();
+            View floorMenuLayout = rootView.findViewById(R.id.bottom_navigation);
+            if(floorMenuLayout != null){
+                floorMenuLayout.setVisibility(visibility);
+            }
         }
     }
 }
