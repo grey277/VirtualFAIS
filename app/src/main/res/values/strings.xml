@@ -2,7 +2,6 @@
     <string name="app_name">Virtual FAIS</string>
 
     <!--_____Menu items_____-->
-    <string name="nav_about_title">O nas</string>
     <string name="nav_contact_title">Kontakt</string>
     <string name="nav_update_title">Aktualizacja</string>
     <string name="nav_help_title">Pomoc</string>
@@ -18,6 +17,7 @@
     <string name="level_two">Poziom 2</string>
     <string name="level_three">Poziom 3</string>
 
+    <!--_____Contact_____-->
     <string name="contact_fragment_title">Wydział Fizyki, Astronomii i Informatyki Stosowanej</string>
     <string name="contact_fragment_adress_header">Adres:</string>
     <string name="contact_fragment_adress">ul. prof. Stanisława Łojasiewicza 11, 30-348 Kraków</string>
@@ -28,5 +28,10 @@
     <string name="contact_fragment_contact_info_header">informacje kontaktowe:</string>
     <string name="contact_fragment_contact_info">http://wydzial.fais@uj.edu.pl\nwww.fais.uj.edu.pl</string>
 
+    <!--_____Help_____-->
     <string name="help_fragment_content">Aby znaleźć drogę do miejsca docelowego należy:\n\n1) przejść do zakładki "<b>Szukaj</b>" i w widocznym polu wpisać <b>nazwę sali</b> (w postaci segment-piętro-nr_sali, np. A-0-1) albo <b>nazwisko</b> pracownika wydziału.\n\n2) kliknąć przycisk "<b>Nawiguj</b>", adzięki czemu na mapie pokaże się droga do konkretnej sali.</string>
+
+    <!--_____Update_____-->
+    <string name="update_fragment_content">Aby pobrać aktualne dane dotyczące pracowników wydziału oraz sal upewnij się, że posiadasz połączenie internetowe, a następnie kliknij przycisk "Aktualizuj"</string>
+    <string name="update_fragment_button">Aktualizuj</string>
 </resources>

@@ -1,10 +1,13 @@
 package com.grey.virtualfais.modules.update;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.grey.virtualfais.ProgressDialogManager;
 import com.grey.virtualfais.R;
 import com.grey.virtualfais.base.BaseFragment;
 
@@ -15,6 +18,7 @@ public class UpdateFragment extends BaseFragment {
             TITLE = "UpdateFragment.TITLE",
             SUBTITLE = "UpdateFragment.SUBTITLE";
     private String title, subtitle;
+    private Button updateButton;
 
     public static UpdateFragment newInstance(String title, String subtitle) {
         UpdateFragment result = new UpdateFragment();
@@ -52,12 +56,22 @@ public class UpdateFragment extends BaseFragment {
     }
 
     private void bind(View view) {
-
+        updateButton = view.findViewById(R.id.update_button);
     }
 
     private void setupViews() {
+        updateButton.setOnClickListener(v -> {
 
+            ProgressDialogManager.get().show(getContext());
+
+            new Handler().postDelayed(() -> {
+                ProgressDialogManager.get().dismiss();
+                doBackground();
+            }, 3000);
+        });
     }
+
+    private void doBackground() {}
 
     @Override
     public String getTitle() {

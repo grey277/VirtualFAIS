@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import com.grey.virtualfais.base.BaseActivity;
 import com.grey.virtualfais.base.OnFragmentBackOnScreen;
 import com.grey.virtualfais.models.Level;
-import com.grey.virtualfais.modules.about.AboutFragment;
 import com.grey.virtualfais.modules.contact.ContactFragment;
 import com.grey.virtualfais.modules.help.HelpFragment;
 import com.grey.virtualfais.modules.search.SearchFragment;
@@ -35,7 +34,7 @@ public class MainActivity extends BaseActivity {
     private NavigationView navigationView;
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
-    private String currentFragment;
+    public String currentFragment;
     private BottomNavigationView bottomNavigation;
     private Level currentLevel = Level.ZERO;
 
@@ -120,6 +119,7 @@ public class MainActivity extends BaseActivity {
     private MainFragment getMainFragment() {
         MainFragment fragment = MainFragment.newInstance();
 
+        currentFragment = fragment.getClass().getName();
         Bundle args = new Bundle();
         args.putSerializable("level", currentLevel);
         fragment.setArguments(args);
@@ -176,13 +176,10 @@ public class MainActivity extends BaseActivity {
         }, 200);
     }
 
-    private void runFragment() {
+    public void runFragment() {
         String title = currentFragment;
 
-        if (title.equalsIgnoreCase(getString(R.string.nav_about_title))) {
-            attachFragment(AboutFragment.newInstance(getString(R.string.nav_about_title), "subtitle"), AboutFragment.TAG, true);
-
-        } else if (title.equalsIgnoreCase(getString(R.string.nav_contact_title))) {
+        if (title.equalsIgnoreCase(getString(R.string.nav_contact_title))) {
             attachFragment(ContactFragment.newInstance(getString(R.string.nav_contact_title), "subtitle"), ContactFragment.TAG, true);
 
         } else if (title.equalsIgnoreCase(getString(R.string.nav_help_title))) {

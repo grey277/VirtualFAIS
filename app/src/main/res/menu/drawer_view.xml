@@ -1,9 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/about"
-            android:title="@string/nav_about_title" />
+
         <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/contact"
@@ -17,9 +14,5 @@
             android:icon="@drawable/help"
             android:title="@string/nav_help_title" />
 
-        <item
-            android:id="@+id/nav_search"
-            android:icon="@drawable/search"
-            android:title="@string/nav_search_title" />
     </group>
 </menu>

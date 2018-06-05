@@ -42,9 +42,9 @@ public class MapViewFragment extends TileViewFragment {
         level = (Level) getArguments().get("level");
         mapProvider = new MapProvider(level);
 
-        DetectClick detectClick = new DetectClick(
+        DetectClick detectClick = new DetectClick (
                 getResources(),
-                getActivity().getApplicationContext(),
+                getContext(),
                 level
         );
 
