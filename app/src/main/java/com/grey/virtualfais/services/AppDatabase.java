@@ -14,7 +14,7 @@ import com.grey.virtualfais.models.Room;
 
 import static android.arch.persistence.room.Room.databaseBuilder;
 
-@Database(entities = {Employee.class, Room.class, Lastupdate.class}, version = 4)
+@Database(entities = {Employee.class, Room.class, Lastupdate.class}, version = 5)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DB_NAME = "virtualfais.db";
     private static volatile AppDatabase instance;
