@@ -48,6 +48,17 @@ public class PopupActivity extends Activity {
         // show room number in popup
         roomNumberTextField.setText(room.getId());
 
+        // show phone number
+        String phoneNum = room.getPhoneNumber();
+
+        if (phoneNum != null) {
+            phoneTextField.setText(phoneNum);
+        } else {
+            findViewById(R.id.phone_pp).setVisibility(View.GONE); // text field title
+            phoneTextField.setVisibility(View.GONE);
+        }
+
+        // show employee fullname
         employeeDao = appDatabase.employeeDao();
         Employee employee = employeeDao.getEmployeesByRoomId(room_id);
 
@@ -56,16 +67,6 @@ public class PopupActivity extends Activity {
         } else {
             findViewById(R.id.employees_pp).setVisibility(View.GONE); // text field title
             employeesTextField.setVisibility(View.GONE);
-        }
-
-        String phoneNum = "";
-        phoneNum = "126644511";
-
-        if (phoneNum != null && phoneNum != "") {
-            phoneTextField.setText(phoneNum);
-        } else {
-            findViewById(R.id.phone_pp).setVisibility(View.GONE); // text field title
-            phoneTextField.setVisibility(View.GONE);
         }
 
     }
