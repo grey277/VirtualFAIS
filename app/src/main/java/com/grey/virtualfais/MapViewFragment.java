@@ -3,9 +3,10 @@ package com.grey.virtualfais;
 
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.grey.virtualfais.models.Level;
@@ -13,6 +14,9 @@ import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.MapProvider;
 import com.qozix.tileview.TileView;
 import com.qozix.tileview.hotspots.HotSpot;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class MapViewFragment extends TileViewFragment {
     Level level;
@@ -37,6 +41,7 @@ public class MapViewFragment extends TileViewFragment {
         super.setArguments(args);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void setupViews() {
         level = (Level) getArguments().get("level");
@@ -89,6 +94,7 @@ public class MapViewFragment extends TileViewFragment {
         tileView.setShouldLoopScale(false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void drawPath(TileView tileView, DetectClick detectClick, PathDrawer pathDrawer, int x, int y) {
         Log.d("HotSpot", "X/Y " + x + " " + y);
         int scaledX = (int) (x / tileView.getScale());
@@ -96,19 +102,31 @@ public class MapViewFragment extends TileViewFragment {
         Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
         Room r = detectClick.getClosestRoom(scaledX, scaledY, level);
         pathDrawer.clearPath();
+        PathFinder pathFinder = new PathFinder();
         if (r != null) {
             Log.d("HotSpotTapped", "With access through the tag API to the Activity " + r.getId());
             Intent i = new Intent(getActivity(), PopupActivity.class);
             i.putExtra("room_id", r.getId());
-            startActivity(i);
-            pathDrawer.newPath(8489, 4811);
-            pathDrawer.nextPoint(7670, 5527);
-            pathDrawer.nextPoint(7013, 5669);
-            pathDrawer.nextPoint(6199, 4049);
-            pathDrawer.nextPoint(3891, 2424);
-            pathDrawer.nextPoint(4129, 1732);
-            pathDrawer.nextPoint(2759, 761);
-            pathDrawer.endPath();
+            //startActivity(i);
+            int FIRST_FLOOR_ID  = 2131165296;
+            int floorId = level.getMaskId();
+
+            List<Node> path = pathFinder.goToSelectedRoom(r.getId(), floorId);
+            if(!path.isEmpty())
+            {
+                if (FIRST_FLOOR_ID == floorId)
+                {
+                    pathDrawer.newPath(pathFinder.getStartNode().x, pathFinder.getStartNode().y);
+                } else {
+                    pathDrawer.newPath(path.get(0).x, path.get(0).y);
+                    path.remove(0);
+                }
+
+                for (Node node : path) {
+                    pathDrawer.nextPoint(node.x, node.y);
+                }
+                pathDrawer.endPath();
+            }
         }
     }
 
