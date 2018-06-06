@@ -2,6 +2,7 @@ package com.grey.virtualfais.modules.search;
 
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,13 @@ import android.widget.Button;
 
 import com.grey.virtualfais.R;
 import com.grey.virtualfais.base.BaseFragment;
+import com.grey.virtualfais.daos.EmployeeDao;
+import com.grey.virtualfais.daos.RoomDao;
+import com.grey.virtualfais.models.Employee;
+import com.grey.virtualfais.models.Room;
+import com.grey.virtualfais.services.AppDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class SearchFragment extends BaseFragment {
@@ -24,14 +29,25 @@ public class SearchFragment extends BaseFragment {
     private String title, subtitle;
     private AutoCompleteTextView autoCompleteTextView;
     private Button navigate;
+    private AppDatabase appDatabase = AppDatabase.getInstance(getContext());
+    private EmployeeDao employeeDao = appDatabase.employeeDao();
+    private RoomDao roomDao = appDatabase.roomDao();
 
-    public static SearchFragment newInstance(String title, String subtitle) {
+    private String selectedValue = "";
+
+
+    SearchHandler searchHandler;
+    private ArrayList<String> catchwordsList;
+
+    public static SearchFragment newInstance(String title, String subtitle, SearchHandler searchHandler) {
         SearchFragment result = new SearchFragment();
 
         Bundle bundle = new Bundle(2);
         bundle.putString(TITLE, title);
         bundle.putString(SUBTITLE, subtitle);
         result.setArguments(bundle);
+
+        result.searchHandler = searchHandler;
 
         return result;
     }
@@ -65,17 +81,60 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void setupViews() {
-        // TODO: pass catchword list
-        List<String> catchwordsList = new ArrayList<>();
-        catchwordsList.add("Test A");
-        catchwordsList.add("Test B");
+        catchwordsList = new ArrayList<>();
+        for (Room room : roomDao.getAll()) {
+            catchwordsList.add(room.getId());
+        }
+        for (Employee employee : employeeDao.getAll()) {
+            String employeeItem = employee.getName().getFirstName() + " " + employee.getName().getLastName() + " (" + employee.getRoomId() + ")";
+            if (employee.getName().getTitle() != null && !employee.getName().getTitle().equals("")) {
+                employeeItem = employee.getName().getTitle() + " " + employeeItem;
+            }
+            catchwordsList.add(employeeItem);
+        }
         ArrayAdapter adapter = new ArrayAdapter(getContext(), android.R.layout.select_dialog_item, catchwordsList);
         autoCompleteTextView.setThreshold(1);
         autoCompleteTextView.setAdapter(adapter);
 
-        navigate.setOnClickListener(v -> {
-            //TODO: make some action
+        autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> updateButtonState((String) parent.getItemAtPosition(position)));
+
+        autoCompleteTextView.setOnDismissListener(this::updateButtonState);
+
+        autoCompleteTextView.setOnKeyListener((v, keyCode, event) -> {
+            updateButtonState();
+            return false;
         });
+
+        navigate.setOnClickListener(button -> {
+            if (!button.isClickable()) {
+                return;
+            }
+
+            if (selectedValue.indexOf('(') > -1) {
+                searchHandler.accept(selectedValue.substring(selectedValue.indexOf('(') + 1, selectedValue.indexOf(')')));
+            } else {
+                searchHandler.accept(selectedValue);
+            }
+        });
+    }
+
+    private void updateButtonState() {
+        updateButtonState(autoCompleteTextView.getText().toString());
+    }
+
+    private void updateButtonState(String selectedValue) {
+        this.selectedValue = selectedValue;
+        boolean buttonActive = catchwordsList.contains(selectedValue);
+        setButtonActive(navigate, buttonActive);
+    }
+
+    private void setButtonActive(Button button, boolean active) {
+        button.setClickable(active);
+        if (active) {
+            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        } else {
+            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dark_gray));
+        }
     }
 
     @Override

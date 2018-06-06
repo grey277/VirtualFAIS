@@ -3,15 +3,20 @@ package com.grey.virtualfais;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.grey.virtualfais.daos.EmployeeDao;
 import com.grey.virtualfais.daos.LastupdateDao;
 import com.grey.virtualfais.daos.RoomDao;
+import com.grey.virtualfais.models.Department;
+import com.grey.virtualfais.models.Employee;
 import com.grey.virtualfais.models.Lastupdate;
+import com.grey.virtualfais.models.Name;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.AppDatabase;
 
 public class UpdateDatabase {
 
     private static RoomDao roomDao;
+    private static EmployeeDao employeeDao;
     private static LastupdateDao lastupdateDao;
 
     private static final long updateID = 1233215596L;
@@ -22,6 +27,7 @@ public class UpdateDatabase {
         AppDatabase appDatabase = AppDatabase.getInstance(context);
 
         roomDao = appDatabase.roomDao();
+        employeeDao = appDatabase.employeeDao();
         lastupdateDao = appDatabase.lastupdateDao();
         checkDatabase();
     }
@@ -31,13 +37,20 @@ public class UpdateDatabase {
         if(lastupdate != null) {
             if(lastupdate.getId() != updateID) {
                 roomDao.deleteAllRecords();
+                employeeDao.deleteAllRecords();
                 insertRooms();
+                insertEmployees();
             }
         } else {
             Lastupdate last = new Lastupdate(updateID);
             lastupdateDao.insert(last);
             insertRooms();
         }
+    }
+
+    private static void insertEmployees() {
+        //dummy employee, to remove when we will have correct data
+        employeeDao.insert(new Employee(new Name("dr","Jan","Kowalek"),  new Department("sd", "sddd"), "D-2-43"));
     }
 
     private static void insertRooms() {
