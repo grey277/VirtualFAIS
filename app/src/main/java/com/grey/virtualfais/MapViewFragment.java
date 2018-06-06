@@ -110,7 +110,7 @@ public class MapViewFragment extends TileViewFragment {
             List<Node> path = pathFinder.goToSelectedRoom(room.getId(), level);
             if(!path.isEmpty())
             {
-                if (Level.ONE.equals(level))
+                if (Level.ZERO.equals(level))
                 {
                     pathDrawer.newPath(pathFinder.getStartNode().x, pathFinder.getStartNode().y);
                 } else {
