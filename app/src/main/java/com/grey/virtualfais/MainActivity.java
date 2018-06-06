@@ -23,7 +23,6 @@ import com.grey.virtualfais.models.Level;
 import com.grey.virtualfais.modules.contact.ContactFragment;
 import com.grey.virtualfais.modules.help.HelpFragment;
 import com.grey.virtualfais.modules.search.SearchFragment;
-import com.grey.virtualfais.modules.update.UpdateFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -184,9 +183,6 @@ public class MainActivity extends BaseActivity {
 
         } else if (title.equalsIgnoreCase(getString(R.string.nav_help_title))) {
             attachFragment(HelpFragment.newInstance(getString(R.string.nav_help_title), "subtitle"), HelpFragment.TAG, true);
-
-        } else if (title.equalsIgnoreCase(getString(R.string.nav_update_title))) {
-            attachFragment(UpdateFragment.newInstance(getString(R.string.nav_update_title), "subtitle"), UpdateFragment.TAG, true);
 
         } else if (title.equalsIgnoreCase(getString(R.string.nav_search_title))) {
             attachFragment(SearchFragment.newInstance(getString(R.string.nav_search_title), "subtitle"), SearchFragment.TAG, true);
