@@ -52,27 +52,30 @@ public class PopupActivity extends Activity {
 
         roomNumberTextField.setText(room.getId());
 
-        String phoneNum = room.getPhoneNumber();
-        if (phoneNum != null) {
-            phoneTextField.setText(phoneNum);
-        } else {
-            findViewById(R.id.phone_label).setVisibility(View.GONE);
-            phoneTextField.setVisibility(View.GONE);
-        }
+
 
         employeeDao = appDatabase.employeeDao();
         List<Employee> employeesList = employeeDao.getEmployeesByRoomId(room_id);
 
         if (employeesList != null && employeesList.size() > 0) {
             Set<String> fullNamesSet = new HashSet<>();
+            Set<String> telephonesSet = new HashSet<>();
             for (Employee e : employeesList) {
                 fullNamesSet.add(e.getName().getFirstName() + " " + e.getName().getLastName());
+                telephonesSet.add(e.getTelephone());
             }
             employeesTextField.setText(String.join(", ", fullNamesSet));
+            phoneTextField.setText(String.join(", ", telephonesSet));
+
         } else {
             findViewById(R.id.employees_label).setVisibility(View.GONE);
             employeesTextField.setVisibility(View.GONE);
+            findViewById(R.id.phone_label).setVisibility(View.GONE);
+            phoneTextField.setVisibility(View.GONE);
         }
+
+
+
 
     }
 }

@@ -24,7 +24,6 @@ import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.modules.contact.ContactFragment;
 import com.grey.virtualfais.modules.help.HelpFragment;
 import com.grey.virtualfais.modules.search.SearchFragment;
-import com.grey.virtualfais.modules.update.UpdateFragment;
 import com.grey.virtualfais.services.AppDatabase;
 
 public class MainActivity extends BaseActivity {

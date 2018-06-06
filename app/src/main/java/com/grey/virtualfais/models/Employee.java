@@ -27,6 +27,7 @@ public class Employee {
         this.name = name;
         this.department = department;
         this.roomId = roomId;
+        this.telephone = telephone;
     }
 
     public long getId() {

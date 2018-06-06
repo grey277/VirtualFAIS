@@ -18,7 +18,6 @@ public class UpdateDatabase {
     private static RoomDao roomDao;
     private static EmployeeDao employeeDao;
     private static LastupdateDao lastupdateDao;
-    private static EmployeeDao employeeDao;
 
     private static final long updateID = 1233215596L;
 
@@ -51,7 +50,7 @@ public class UpdateDatabase {
             insertEmployees();
         }
     }
-    
+
     private static void insertEmployees()
     {
         Department d = new Department("FAIS", "Wydział Fizyki, Astronomii i Informatyki Stosowanej");
