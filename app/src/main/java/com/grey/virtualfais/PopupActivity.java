@@ -1,10 +1,11 @@
 package com.grey.virtualfais;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,13 +15,17 @@ import com.grey.virtualfais.models.Employee;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.AppDatabase;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class PopupActivity extends Activity {
 
     static private RoomDao roomDao;
     static private EmployeeDao employeeDao;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,31 +46,31 @@ public class PopupActivity extends Activity {
         roomDao = appDatabase.roomDao();
         Room room = roomDao.getByRoomId(room_id);
 
-        TextView roomNumberTextField = findViewById(R.id.room_popup);   // room number
-        TextView phoneTextField = findViewById(R.id.phone_num_pp);      // phone number
-        TextView employeesTextField = findViewById(R.id.employee_pp);   // employees names
+        TextView roomNumberTextField = findViewById(R.id.room_popup);
+        TextView phoneTextField = findViewById(R.id.phone_num_popup);
+        TextView employeesTextField = findViewById(R.id.employees_popup);
 
-        // show room number in popup
         roomNumberTextField.setText(room.getId());
 
-        // show phone number
         String phoneNum = room.getPhoneNumber();
-
         if (phoneNum != null) {
             phoneTextField.setText(phoneNum);
         } else {
-            findViewById(R.id.phone_pp).setVisibility(View.GONE); // text field title
+            findViewById(R.id.phone_label).setVisibility(View.GONE);
             phoneTextField.setVisibility(View.GONE);
         }
 
-        // show employee fullname
         employeeDao = appDatabase.employeeDao();
-        Employee employee = employeeDao.getEmployeesByRoomId(room_id);
+        List<Employee> employeesList = employeeDao.getEmployeesByRoomId(room_id);
 
-        if (employee != null) {
-            employeesTextField.setText(employee.getName().getFirstName() + " " + employee.getName().getLastName());
+        if (employeesList != null && employeesList.size() > 0) {
+            Set<String> fullNamesSet = new HashSet<>();
+            for (Employee e : employeesList) {
+                fullNamesSet.add(e.getName().getFirstName() + " " + e.getName().getLastName());
+            }
+            employeesTextField.setText(String.join(", ", fullNamesSet));
         } else {
-            findViewById(R.id.employees_pp).setVisibility(View.GONE); // text field title
+            findViewById(R.id.employees_label).setVisibility(View.GONE);
             employeesTextField.setVisibility(View.GONE);
         }
 

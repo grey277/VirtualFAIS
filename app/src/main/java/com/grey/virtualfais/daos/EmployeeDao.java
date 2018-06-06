@@ -21,8 +21,8 @@ public interface EmployeeDao {
 
 
     // select employee in specific room
-    @Query("SELECT * FROM employees WHERE employees.roomId =:id LIMIT 1")
-    Employee getEmployeesByRoomId(String id);
+    @Query("SELECT * FROM employees WHERE employees.roomId =:id ")
+    List<Employee> getEmployeesByRoomId(String id);
 
 
     @Query("SELECT * FROM employees " +
