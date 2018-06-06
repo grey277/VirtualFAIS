@@ -3,9 +3,13 @@ package com.grey.virtualfais;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.grey.virtualfais.daos.EmployeeDao;
 import com.grey.virtualfais.daos.LastupdateDao;
 import com.grey.virtualfais.daos.RoomDao;
+import com.grey.virtualfais.models.Department;
+import com.grey.virtualfais.models.Employee;
 import com.grey.virtualfais.models.Lastupdate;
+import com.grey.virtualfais.models.Name;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.AppDatabase;
 
@@ -13,31 +17,43 @@ public class UpdateDatabase {
 
     private static RoomDao roomDao;
     private static LastupdateDao lastupdateDao;
+    private static EmployeeDao employeeDao;
 
     private static final long updateID = 1233215596L;
 
-    private UpdateDatabase(Context context) { }
+    private UpdateDatabase(Context context) {
+    }
 
     public static void apply(Context context) {
         AppDatabase appDatabase = AppDatabase.getInstance(context);
 
         roomDao = appDatabase.roomDao();
+        employeeDao = appDatabase.employeeDao();
         lastupdateDao = appDatabase.lastupdateDao();
         checkDatabase();
     }
 
     private static void checkDatabase() {
         Lastupdate lastupdate = lastupdateDao.get();
-        if(lastupdate != null) {
-            if(lastupdate.getId() != updateID) {
+        if (lastupdate != null) {
+            if (lastupdate.getId() != updateID) {
                 roomDao.deleteAllRecords();
                 insertRooms();
+                insertEmployees();
             }
         } else {
             Lastupdate last = new Lastupdate(updateID);
             lastupdateDao.insert(last);
             insertRooms();
+            insertEmployees();
         }
+    }
+
+    private static void insertEmployees() {
+        Name n = new Name("", "Agnieszka", "Kuchna");
+        Department d = new Department("IF", "Instytut Fizyki");
+        String r = "D-2-43";
+        employeeDao.insert(new Employee(n, d, r));
     }
 
     private static void insertRooms() {
