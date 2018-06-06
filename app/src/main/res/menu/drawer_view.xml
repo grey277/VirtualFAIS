@@ -6,10 +6,6 @@
             android:icon="@drawable/contact"
             android:title="@string/nav_contact_title" />
         <item
-            android:id="@+id/nav_update"
-            android:icon="@drawable/update"
-            android:title="@string/nav_update_title"/>
-        <item
             android:id="@+id/nav_help"
             android:icon="@drawable/help"
             android:title="@string/nav_help_title" />
