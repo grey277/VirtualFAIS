@@ -24,7 +24,6 @@ import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.modules.contact.ContactFragment;
 import com.grey.virtualfais.modules.help.HelpFragment;
 import com.grey.virtualfais.modules.search.SearchFragment;
-import com.grey.virtualfais.modules.update.UpdateFragment;
 import com.grey.virtualfais.services.AppDatabase;
 
 public class MainActivity extends BaseActivity {
@@ -196,7 +195,15 @@ public class MainActivity extends BaseActivity {
                     roomId -> {
                         Room room = appDatabase.roomDao().getByRoomId(roomId);
 
-                        //TODO: implement here jumping to map view with path to the room
+                        onBackPressed();
+
+                        FragmentManager fm = getSupportFragmentManager();
+                        Fragment content = fm.findFragmentById(R.id.content);
+
+                        if (content instanceof MapViewFragment) {
+                            ((MapViewFragment) content).drawPathTo(room);
+                        }
+
                         Log.i("Search handler", "Found " + room.getId() + " Color(" + room.getColorRed() + ", " + room.getColorGreen() + ", " + room.getColorGreen() + ")");
                     }
             ), SearchFragment.TAG, true);

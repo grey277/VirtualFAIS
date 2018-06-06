@@ -12,15 +12,16 @@ import android.util.Log;
 import com.grey.virtualfais.models.Level;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.MapProvider;
-import com.qozix.tileview.TileView;
 import com.qozix.tileview.hotspots.HotSpot;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MapViewFragment extends TileViewFragment {
-    Level level;
-    MapProvider mapProvider;
+    private Level level;
+    private MapProvider mapProvider;
+    private PathFinder pathFinder = new PathFinder();
+    private PathDrawer pathDrawer;
+    private Room selectedRoom;
 
     public void setLevel(Level level){
         if (!this.level.equals(level)) {
@@ -28,6 +29,9 @@ public class MapViewFragment extends TileViewFragment {
             mapProvider.setLevel(level);
             getTileView().setSize(level.getPlanWidth(), level.getPlanHeight());
             forceRedraw();
+            if(selectedRoom != null) {
+                drawPathTo(selectedRoom);
+            }
         }
     }
 
@@ -55,10 +59,10 @@ public class MapViewFragment extends TileViewFragment {
 
         setupTileView();
 
-        PathDrawer pathDrawer = new PathDrawer(tileView);
+        pathDrawer = new PathDrawer(tileView);
         HotSpot hotSpot = new HotSpot();
         hotSpot.set(new Rect(0, 0, level.getPlanWidth(), level.getPlanHeight()));
-        hotSpot.setHotSpotTapListener((hotSpot1, x, y) -> drawPath(tileView, detectClick, pathDrawer, x, y));
+        hotSpot.setHotSpotTapListener((hotSpot1, x, y) -> handleClick(detectClick, x, y));
 
         tileView.addHotSpot(hotSpot);
     }
@@ -94,27 +98,19 @@ public class MapViewFragment extends TileViewFragment {
         tileView.setShouldLoopScale(false);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void drawPath(TileView tileView, DetectClick detectClick, PathDrawer pathDrawer, int x, int y) {
-        Log.d("HotSpot", "X/Y " + x + " " + y);
-        int scaledX = (int) (x / tileView.getScale());
-        int scaledY = (int) (y / tileView.getScale());
-        Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
-        Room r = detectClick.getClosestRoom(scaledX, scaledY, level);
+    public void drawPathTo(Room room){
+        selectedRoom = room;
         pathDrawer.clearPath();
-        PathFinder pathFinder = new PathFinder();
-        if (r != null) {
-            Log.d("HotSpotTapped", "With access through the tag API to the Activity " + r.getId());
-            Intent i = new Intent(getActivity(), PopupActivity.class);
-            i.putExtra("room_id", r.getId());
-            //startActivity(i);
-            int FIRST_FLOOR_ID  = 2131165296;
-            int floorId = level.getMaskId();
 
-            List<Node> path = pathFinder.goToSelectedRoom(r.getId(), floorId);
+        if (room != null) {
+            Log.d("HotSpotTapped", "With access through the tag API to the Activity " + room.getId());
+            Intent i = new Intent(getActivity(), PopupActivity.class);
+            i.putExtra("room_id", room.getId());
+
+            List<Node> path = pathFinder.goToSelectedRoom(room.getId(), level);
             if(!path.isEmpty())
             {
-                if (FIRST_FLOOR_ID == floorId)
+                if (Level.ONE.equals(level))
                 {
                     pathDrawer.newPath(pathFinder.getStartNode().x, pathFinder.getStartNode().y);
                 } else {
@@ -128,6 +124,18 @@ public class MapViewFragment extends TileViewFragment {
                 pathDrawer.endPath();
             }
         }
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void handleClick(DetectClick detectClick, int x, int y) {
+        Log.d("HotSpot", "X/Y " + x + " " + y);
+        int scaledX = (int) (x / tileView.getScale());
+        int scaledY = (int) (y / tileView.getScale());
+        Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
+        Room clickedRoom = detectClick.getClosestRoom(scaledX, scaledY, level);
+        drawPathTo(clickedRoom);
+
     }
 
 
