@@ -1,11 +1,13 @@
 package com.grey.virtualfais.modules.search;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -110,12 +112,18 @@ public class SearchFragment extends BaseFragment {
                 return;
             }
 
+            hideKeyboard();
             if (selectedValue.indexOf('(') > -1) {
                 searchHandler.accept(selectedValue.substring(selectedValue.indexOf('(') + 1, selectedValue.indexOf(')')));
             } else {
                 searchHandler.accept(selectedValue);
             }
         });
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 
     private void updateButtonState() {

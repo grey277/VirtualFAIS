@@ -1,5 +1,7 @@
 package com.grey.virtualfais;
 
+import com.grey.virtualfais.models.Level;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,8 +38,9 @@ public class PathFinder
         return roomId.charAt(2);
     }
 
-    public List<Node> goToSelectedRoom(String roomId, int floorId)
+    public List<Node> goToSelectedRoom(String roomId, Level level)
     {
+        int floorId = level.getMaskId();
         String segmentWithFloor = "" + getSegmentFromRoomId(roomId) + getFloorFromRoomId(roomId);
         switch (segmentWithFloor)
         {
