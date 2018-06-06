@@ -19,6 +19,12 @@ public interface EmployeeDao {
     @Query("SELECT * FROM Employees")
     List<Employee> getAll();
 
+
+    // select employee in specific room
+    @Query("SELECT * FROM employees WHERE employees.roomId =:id ")
+    List<Employee> getEmployeesByRoomId(String id);
+
+
     @Query("SELECT * FROM employees " +
             "WHERE employees.firstName || ' ' || employees.lastName LIKE :query " +
             "OR employees.lastName || ' ' || employees.firstName LIKE :query")
@@ -28,6 +34,7 @@ public interface EmployeeDao {
         return searchSqlQuery(query + "%");
     }
 
-    @Query("DELETE FROM Employees")
+
+    @Query("DELETE FROM employees")
     void deleteAllRecords();
 }

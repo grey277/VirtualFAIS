@@ -18,15 +18,18 @@ public class UpdateDatabase {
     private static RoomDao roomDao;
     private static EmployeeDao employeeDao;
     private static LastupdateDao lastupdateDao;
+    private static EmployeeDao employeeDao;
 
     private static final long updateID = 1233215596L;
 
-    private UpdateDatabase(Context context) { }
+    private UpdateDatabase(Context context) {
+    }
 
     public static void apply(Context context) {
         AppDatabase appDatabase = AppDatabase.getInstance(context);
 
         roomDao = appDatabase.roomDao();
+        employeeDao = appDatabase.employeeDao();
         lastupdateDao = appDatabase.lastupdateDao();
         employeeDao = appDatabase.employeeDao();
         checkDatabase();
@@ -34,8 +37,8 @@ public class UpdateDatabase {
 
     private static void checkDatabase() {
         Lastupdate lastupdate = lastupdateDao.get();
-        if(lastupdate != null) {
-            if(lastupdate.getId() != updateID) {
+        if (lastupdate != null) {
+            if (lastupdate.getId() != updateID) {
                 roomDao.deleteAllRecords();
                 employeeDao.deleteAllRecords();
                 insertRooms();
@@ -48,7 +51,7 @@ public class UpdateDatabase {
             insertEmployees();
         }
     }
-
+    
     private static void insertEmployees()
     {
         Department d = new Department("FAIS", "Wydział Fizyki, Astronomii i Informatyki Stosowanej");
