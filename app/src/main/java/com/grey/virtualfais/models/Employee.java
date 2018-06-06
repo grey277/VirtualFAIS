@@ -21,7 +21,9 @@ public class Employee {
     @ForeignKey(entity = Room.class, parentColumns = "id", childColumns = "roomId")
     private String roomId;
 
-    public Employee(Name name, Department department, String roomId) {
+    private String telephone;
+
+    public Employee(Name name, Department department, String roomId, String telephone) {
         this.name = name;
         this.department = department;
         this.roomId = roomId;
@@ -46,6 +48,10 @@ public class Employee {
     public Department getDepartment() {
         return department;
     }
+
+    public String getTelephone() { return telephone; }
+
+    public void setTelephone(String telephone) { this.telephone = telephone; }
 
     @Override
     public boolean equals(Object o) {

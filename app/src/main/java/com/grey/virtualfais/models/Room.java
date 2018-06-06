@@ -14,16 +14,13 @@ public class Room {
 
     private int floor;
 
-    private String phoneNumber;
-
     private int colorRed;
     private int colorGreen;
     private int colorBlue;
 
-    public Room(String id, int floor, String phoneNumber, int colorRed, int colorGreen, int colorBlue) {
+    public Room(String id, int floor, int colorRed, int colorGreen, int colorBlue) {
         this.id = id;
         this.floor = floor;
-        this.phoneNumber = phoneNumber;
         this.colorRed = colorRed;
         this.colorGreen = colorGreen;
         this.colorBlue = colorBlue;
@@ -35,14 +32,6 @@ public class Room {
 
     public int getFloor() {
         return floor;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     public int getColorRed() { return colorRed; }
@@ -70,7 +59,6 @@ public class Room {
         return "Room{" +
                 "id='" + id + '\'' +
                 ", floor=" + floor +
-                ", phoneNumber='" + phoneNumber + '\'' +
                 ", colorRed=" + colorRed +
                 ", colorGreen=" + colorGreen +
                 ", colorBlue=" + colorBlue +

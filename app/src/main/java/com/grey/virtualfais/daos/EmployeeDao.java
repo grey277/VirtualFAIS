@@ -27,4 +27,7 @@ public interface EmployeeDao {
     default List<Employee> search(String query) {
         return searchSqlQuery(query + "%");
     }
+
+    @Query("DELETE FROM Employees")
+    void deleteAllRecords();
 }
