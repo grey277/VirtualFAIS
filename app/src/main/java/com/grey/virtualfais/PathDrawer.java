@@ -19,7 +19,7 @@ public class PathDrawer {
         hotSpotPath = new CompositePathView.DrawablePath();
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(20);
+        paint.setStrokeWidth(5);
         paint.setColor(Color.BLUE);
         hotSpotPath.paint = paint;
     }
