@@ -20,9 +20,12 @@ import android.widget.ImageView;
 import com.grey.virtualfais.base.BaseActivity;
 import com.grey.virtualfais.base.OnFragmentBackOnScreen;
 import com.grey.virtualfais.models.Level;
+import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.modules.contact.ContactFragment;
 import com.grey.virtualfais.modules.help.HelpFragment;
 import com.grey.virtualfais.modules.search.SearchFragment;
+import com.grey.virtualfais.modules.update.UpdateFragment;
+import com.grey.virtualfais.services.AppDatabase;
 
 public class MainActivity extends BaseActivity {
 
@@ -36,6 +39,8 @@ public class MainActivity extends BaseActivity {
     public String currentFragment;
     private BottomNavigationView bottomNavigation;
     private Level currentLevel = Level.ZERO;
+    AppDatabase appDatabase;
+
 
     public static boolean isBackFragment(Fragment fragment) {
         return (fragment instanceof OnFragmentBackOnScreen
@@ -46,6 +51,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        appDatabase = AppDatabase.getInstance(getApplicationContext());
         UpdateDatabase.apply(getApplicationContext());
 
         setContentView(R.layout.activity_main);
@@ -185,7 +191,15 @@ public class MainActivity extends BaseActivity {
             attachFragment(HelpFragment.newInstance(getString(R.string.nav_help_title), "subtitle"), HelpFragment.TAG, true);
 
         } else if (title.equalsIgnoreCase(getString(R.string.nav_search_title))) {
-            attachFragment(SearchFragment.newInstance(getString(R.string.nav_search_title), "subtitle"), SearchFragment.TAG, true);
+            attachFragment(SearchFragment.newInstance(
+                    getString(R.string.nav_search_title), "subtitle",
+                    roomId -> {
+                        Room room = appDatabase.roomDao().getByRoomId(roomId);
+
+                        //TODO: implement here jumping to map view with path to the room
+                        Log.i("Search handler", "Found " + room.getId() + " Color(" + room.getColorRed() + ", " + room.getColorGreen() + ", " + room.getColorGreen() + ")");
+                    }
+            ), SearchFragment.TAG, true);
         } else {
             attachFragment(getMainFragment(), MainFragment.TAG);
         }

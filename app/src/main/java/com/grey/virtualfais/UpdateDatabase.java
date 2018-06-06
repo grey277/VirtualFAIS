@@ -16,6 +16,7 @@ import com.grey.virtualfais.services.AppDatabase;
 public class UpdateDatabase {
 
     private static RoomDao roomDao;
+    private static EmployeeDao employeeDao;
     private static LastupdateDao lastupdateDao;
     private static EmployeeDao employeeDao;
 
@@ -38,6 +39,7 @@ public class UpdateDatabase {
         if (lastupdate != null) {
             if (lastupdate.getId() != updateID) {
                 roomDao.deleteAllRecords();
+                employeeDao.deleteAllRecords();
                 insertRooms();
                 insertEmployees();
             }
@@ -50,10 +52,8 @@ public class UpdateDatabase {
     }
 
     private static void insertEmployees() {
-        Name n = new Name("", "Agnieszka", "Kuchna");
-        Department d = new Department("IF", "Instytut Fizyki");
-        String r = "D-2-43";
-        employeeDao.insert(new Employee(n, d, r));
+        //dummy employee, to remove when we will have correct data
+        employeeDao.insert(new Employee(new Name("dr","Jan","Kowalek"),  new Department("sd", "sddd"), "D-2-43"));
     }
 
     private static void insertRooms() {
