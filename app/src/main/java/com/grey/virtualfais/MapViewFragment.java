@@ -30,7 +30,7 @@ public class MapViewFragment extends TileViewFragment {
             getTileView().setSize(level.getPlanWidth(), level.getPlanHeight());
             forceRedraw();
             if(selectedRoom != null) {
-                drawPathTo(selectedRoom);
+                drawPathTo(selectedRoom, false);
             }
         }
     }
@@ -98,15 +98,17 @@ public class MapViewFragment extends TileViewFragment {
         tileView.setShouldLoopScale(false);
     }
 
-    public void drawPathTo(Room room){
+    public void drawPathTo(Room room, boolean isPopoutNeeded){
         selectedRoom = room;
         pathDrawer.clearPath();
 
         if (room != null) {
             Log.d("HotSpotTapped", "With access through the tag API to the Activity " + room.getId());
-            Intent i = new Intent(getActivity(), PopupActivity.class);
-            i.putExtra("room_id", room.getId());
-
+            if(isPopoutNeeded) {
+                Intent i = new Intent(getActivity(), PopupActivity.class);
+                i.putExtra("room_id", room.getId());
+                startActivity(i);
+            }
             List<Node> path = pathFinder.goToSelectedRoom(room.getId(), level);
             if(!path.isEmpty())
             {
@@ -134,7 +136,7 @@ public class MapViewFragment extends TileViewFragment {
         int scaledY = (int) (y / tileView.getScale());
         Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
         Room clickedRoom = detectClick.getClosestRoom(scaledX, scaledY, level);
-        drawPathTo(clickedRoom);
+        drawPathTo(clickedRoom, true);
 
     }
 

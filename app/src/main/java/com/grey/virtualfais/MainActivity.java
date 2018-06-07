@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity {
                         Fragment content = fm.findFragmentById(R.id.content);
 
                         if (content instanceof MapViewFragment) {
-                            ((MapViewFragment) content).drawPathTo(room);
+                            ((MapViewFragment) content).drawPathTo(room, true);
                         }
 
                         Log.i("Search handler", "Found " + room.getId() + " Color(" + room.getColorRed() + ", " + room.getColorGreen() + ", " + room.getColorGreen() + ")");
