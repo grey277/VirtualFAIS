@@ -59,6 +59,9 @@ public class Room {
         return "Room{" +
                 "id='" + id + '\'' +
                 ", floor=" + floor +
+                ", colorRed=" + colorRed +
+                ", colorGreen=" + colorGreen +
+                ", colorBlue=" + colorBlue +
                 '}';
     }
 }

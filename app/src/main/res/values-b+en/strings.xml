@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Virtual FAIS</string>
+
+    <!--_____Menu items_____-->
+    <string name="nav_contact_title">Contact</string>
+    <string name="nav_update_title">Update</string>
+    <string name="nav_help_title">Help</string>
+    <string name="nav_search_title">Search</string>
+
+    <string name="navigation_drawer_open">Open side menu </string>
+    <string name="navigation_drawer_close">Close side menu </string>
+    <string name="sala">Room</string>
+    <string name="telefon">Telephone</string>
+    <string name="pracownicy">Staff:</string>
+
+    <string name="level_one">Level 1</string>
+    <string name="level_two">Level 2</string>
+    <string name="level_three">Level 3</string>
+
+    <!--_____Contact_____-->
+    <string name="contact_fragment_title">Faculty of Physics, Astronomy and Informatics</string>
+    <string name="contact_fragment_adress_header">Address:</string>
+    <string name="contact_fragment_adress">prof. Stanisława Łojasiewicza 11, 30-348 Cracow</string>
+    <string name="contact_fragment_phone_header">Telephone:</string>
+    <string name="contact_fragment_phone">12 664 4890</string>
+    <string name="contact_fragment_fax_header">Fax:</string>
+    <string name="contact_fragment_fax">12 664 4905</string>
+    <string name="contact_fragment_contact_info_header">additional information:</string>
+    <string name="contact_fragment_contact_info">http://wydzial.fais@uj.edu.pl\nwww.fais.uj.edu.pl</string>
+
+    <!--_____Help_____-->
+    <string name="help_fragment_content">To find the way to the destination:\n\n1) go to the tab "<b> Search </b>" and enter <b> room name </b> in the visible field (in the form of segment-floor-no_sale, e.g. A-0-1) or the <b> surname </b> of the faculty employee.\n\n2) click the "<b> Navigate </b>" button, and the map will show you the way to a specific room.</string>
+
+
+</resources>
