@@ -16,6 +16,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'javax/**'
+        exclude 'com/fasterxml/jackson/**'
+        exclude 'ASL2.0'
+        exclude 'properties.dtd'
+        exclude 'org/apache/commons/digester/xmlrules/digester-rules.dtd'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/info.xml'
+        exclude 'digesterRules.xml'
+        exclude 'PropertyList-1.0.dtd'
+    }
+
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
@@ -29,15 +42,13 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:support-v4:27.1.1'
-
-
     implementation "android.arch.persistence.room:runtime:1.0.0"
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
     implementation "android.arch.persistence.room:rxjava2:1.0.0"
-
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'org.assertj:assertj-core:3.9.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.android.support:support-v13:27.1.1'
+    implementation 'es.usc.citius.hipster:hipster-core:1.0.1'
 }
