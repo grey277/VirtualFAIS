@@ -14,7 +14,7 @@ import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.MapProvider;
 import com.qozix.tileview.hotspots.HotSpot;
 
-import java.util.List;
+import java.util.LinkedList;
 
 public class MapViewFragment extends TileViewFragment {
     private Level level;
@@ -108,20 +108,19 @@ public class MapViewFragment extends TileViewFragment {
                 Intent i = new Intent(getActivity(), PopupActivity.class);
                 i.putExtra("room_id", room.getId());
                 startActivity(i);
-            }
-            List<Node> path = pathFinder.goToSelectedRoom(room.getId(), level);
-            if(!path.isEmpty())
-            {
-                if (Level.ZERO.equals(level))
-                {
-                    pathDrawer.newPath(pathFinder.getStartNode().x, pathFinder.getStartNode().y);
-                } else {
-                    pathDrawer.newPath(path.get(0).x, path.get(0).y);
-                    path.remove(0);
-                }
 
-                for (Node node : path) {
-                    pathDrawer.nextPoint(node.x, node.y);
+                LinkedList<String> resultList = pathFinder.getPathToPoint(room.getId());
+                for (String nodeName : resultList)
+                {
+                    Node nodeTmp = pathFinder.getNodeFromGroundFloorMapNodes(nodeName);
+                    if("START".equals(nodeName))
+                    {
+                        pathDrawer.newPath(nodeTmp.getX(), nodeTmp.getY());
+                    }
+                    else
+                    {
+                        pathDrawer.nextPoint(nodeTmp.getX(), nodeTmp.getY());
+                    }
                 }
                 pathDrawer.endPath();
             }

@@ -76,7 +76,7 @@ public class DetectClick {
 
     public Room getClosestRoom(int x, int y, int minDiff) {
         int color = getColor(x, y);
-        Log.d("DetectClick", "Clicked on color: " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " x/y: " + x + " " + y);
+        Log.d("DetectClick", "Clicked on color: " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " x/y: " + x + ", " + y);
         return roomDao.getByColor(Color.red(color), Color.green(color), Color.blue(color), minDiff);
     }
 
