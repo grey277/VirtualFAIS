@@ -6,15 +6,17 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 
 import com.grey.virtualfais.daos.EmployeeDao;
+import com.grey.virtualfais.daos.LanguageDao;
 import com.grey.virtualfais.daos.LastupdateDao;
 import com.grey.virtualfais.daos.RoomDao;
 import com.grey.virtualfais.models.Employee;
+import com.grey.virtualfais.models.Language;
 import com.grey.virtualfais.models.Lastupdate;
 import com.grey.virtualfais.models.Room;
 
 import static android.arch.persistence.room.Room.databaseBuilder;
 
-@Database(entities = {Employee.class, Room.class, Lastupdate.class}, version = 6)
+@Database(entities = {Employee.class, Room.class, Lastupdate.class, Language.class}, version = 8)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DB_NAME = "virtualfais.db";
     private static volatile AppDatabase instance;
@@ -35,4 +37,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract RoomDao roomDao();
 
     public abstract LastupdateDao lastupdateDao();
+
+    public abstract LanguageDao languageDao();
 }

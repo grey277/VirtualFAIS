@@ -5,6 +5,7 @@
     <string name="nav_contact_title">Kontakt</string>
     <string name="nav_help_title">Pomoc</string>
     <string name="nav_search_title">Szukaj</string>
+    <string name="nav_settings_title">Ustawienia</string>
 
     <string name="navigation_drawer_open">Otwórz menu boczne</string>
     <string name="navigation_drawer_close">Zamknij menu boczne</string>
@@ -27,6 +28,14 @@
     <string name="contact_fragment_contact_info_header">informacje kontaktowe:</string>
     <string name="contact_fragment_contact_info">http://wydzial.fais@uj.edu.pl\nwww.fais.uj.edu.pl</string>
 
+    <!--____Settings_____-->
+    <string name="polish_language">POLSKI</string>
+    <string name="english_language">ANGIELSKI</string>
+
+   <!--_____Search_____-->
+    <string name="search_content">Wybierz swój punkt docelowy wpisując nazwę sali (np. A-0-1) lub nazwisko pracownika wydziału</string>
+    <string name="navigate">Nawiguj</string>
+    <string name="destination">Punkt docelowy</string>
     <!--_____Help_____-->
     <string name="help_fragment_content">Aby znaleźć drogę do miejsca docelowego należy:\n\n1) przejść do zakładki "<b>Szukaj</b>" i w widocznym polu wpisać <b>nazwę sali</b> (w postaci segment-piętro-nr_sali, np. A-0-01) albo <b>nazwisko</b> pracownika wydziału.\n\n2) kliknąć przycisk "<b>Nawiguj</b>", dzięki czemu na mapie pokaże się droga do konkretnej sali.</string>
 

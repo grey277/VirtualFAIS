@@ -1,8 +1,8 @@
 package com.grey.virtualfais;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -19,12 +19,17 @@ import android.widget.ImageView;
 
 import com.grey.virtualfais.base.BaseActivity;
 import com.grey.virtualfais.base.OnFragmentBackOnScreen;
+import com.grey.virtualfais.daos.LanguageDao;
+import com.grey.virtualfais.models.Language;
 import com.grey.virtualfais.models.Level;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.modules.contact.ContactFragment;
 import com.grey.virtualfais.modules.help.HelpFragment;
 import com.grey.virtualfais.modules.search.SearchFragment;
+import com.grey.virtualfais.modules.settings.SettingsFragment;
 import com.grey.virtualfais.services.AppDatabase;
+
+import java.util.Locale;
 
 public class MainActivity extends BaseActivity {
 
@@ -39,6 +44,7 @@ public class MainActivity extends BaseActivity {
     private BottomNavigationView bottomNavigation;
     private Level currentLevel = Level.ZERO;
     AppDatabase appDatabase;
+    private LanguageDao languageDao;
 
 
     public static boolean isBackFragment(Fragment fragment) {
@@ -52,7 +58,13 @@ public class MainActivity extends BaseActivity {
 
         appDatabase = AppDatabase.getInstance(getApplicationContext());
         UpdateDatabase.apply(getApplicationContext());
+        languageDao = appDatabase.languageDao();
 
+        loadLocale();
+        refreshApp();
+    }
+
+    public void refreshApp() {
         setContentView(R.layout.activity_main);
 
         image = findViewById(R.id.image);
@@ -60,9 +72,36 @@ public class MainActivity extends BaseActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         bind();
         setupViews();
+
+    }
+
+    private void loadLocale() {
+        if (null != languageDao.getLanguage()) {
+            Language savedLanguage = languageDao.getLanguage();
+            setLanguage(savedLanguage.getLanguage());
+        }
+    }
+
+    public void setLanguage(String language) {
+        saveLanguage(language);
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getResources().updateConfiguration(
+                config,
+                getResources().getDisplayMetrics()
+        );
+        refreshApp();
+    }
+
+    private void saveLanguage(String languageToSave)
+    {
+        languageDao.deleteAllRecords();
+        Language language = new Language(languageToSave);
+        languageDao.insert(language);
     }
 
     @Override
@@ -189,6 +228,8 @@ public class MainActivity extends BaseActivity {
         } else if (title.equalsIgnoreCase(getString(R.string.nav_help_title))) {
             attachFragment(HelpFragment.newInstance(getString(R.string.nav_help_title), "subtitle"), HelpFragment.TAG, true);
 
+        } else if (title.equalsIgnoreCase(getString(R.string.nav_settings_title))) {
+            attachFragment(SettingsFragment.newInstance(getString(R.string.nav_settings_title), "subtitle"), SettingsFragment.TAG, true);
         } else if (title.equalsIgnoreCase(getString(R.string.nav_search_title))) {
             attachFragment(SearchFragment.newInstance(
                     getString(R.string.nav_search_title), "subtitle",

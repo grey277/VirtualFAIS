@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/polish_lang"
+            android:layout_width="154dp"
+            android:layout_height="84dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="148dp"
+            android:background="@drawable/polska_flaga"
+            tools:layout_editor_absoluteX="115dp"
+            tools:layout_editor_absoluteY="137dp" />
+
+        <Button
+            android:id="@+id/english_lang"
+            android:layout_width="152dp"
+            android:layout_height="102dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="153dp"
+            android:background="@drawable/uk_flaga"
+            tools:layout_editor_absoluteX="116dp"
+            tools:layout_editor_absoluteY="318dp" />
+
+        <TextView
+            android:id="@+id/polish_lang_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/polish_lang"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-148dp"
+            android:text="@string/polish_language"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="142dp"
+            tools:layout_editor_absoluteY="96dp" />
+
+        <TextView
+            android:id="@+id/english_lang_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/english_lang"
+            android:layout_centerHorizontal="true"
+            android:text="@string/english_language"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="119dp"
+            tools:layout_editor_absoluteY="277dp" />
+    </RelativeLayout>
+</FrameLayout>

@@ -7,6 +7,7 @@
     <string name="nav_update_title">Update</string>
     <string name="nav_help_title">Help</string>
     <string name="nav_search_title">Search</string>
+    <string name="nav_settings_title">Settings</string>
 
     <string name="navigation_drawer_open">Open side menu </string>
     <string name="navigation_drawer_close">Close side menu </string>
@@ -28,6 +29,15 @@
     <string name="contact_fragment_fax">12 664 4905</string>
     <string name="contact_fragment_contact_info_header">additional information:</string>
     <string name="contact_fragment_contact_info">http://wydzial.fais@uj.edu.pl\nwww.fais.uj.edu.pl</string>
+
+    <!--____Settings_____-->
+    <string name="polish_language">POLISH</string>
+    <string name="english_language">ENGLISH</string>
+
+    <!-- ____Search______!=-->
+    <string name="search_content">Select your destination by entering the name of the room (eg A-0-1) or the name of the faculty member.</string>
+    <string name="navigate">Navigate</string>
+    <string name="destination">Destination</string>
 
     <!--_____Help_____-->
     <string name="help_fragment_content">To find the way to the destination:\n\n1) go to the tab "<b> Search </b>" and enter <b> room name </b> in the visible field (in the form of segment-floor-no_sale, e.g. A-0-1) or the <b> surname </b> of the faculty employee.\n\n2) click the "<b> Navigate </b>" button, and the map will show you the way to a specific room.</string>
