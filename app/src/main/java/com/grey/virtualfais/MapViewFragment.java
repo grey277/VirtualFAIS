@@ -112,7 +112,7 @@ public class MapViewFragment extends TileViewFragment {
                 LinkedList<String> resultList = pathFinder.getPathToPoint(room.getId());
                 for (String nodeName : resultList)
                 {
-                    Node nodeTmp = pathFinder.getNodeFromGroundFloorMapNodes(nodeName);
+                    Node nodeTmp = pathFinder.getNodeFromLevelMapNode(nodeName, level);
                     if("START".equals(nodeName))
                     {
                         pathDrawer.newPath(nodeTmp.getX(), nodeTmp.getY());

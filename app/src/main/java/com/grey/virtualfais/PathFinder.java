@@ -1,5 +1,7 @@
 package com.grey.virtualfais;
 
+import com.grey.virtualfais.models.Level;
+
 import java.util.HashMap;
 
 import java.util.LinkedList;
@@ -98,6 +100,42 @@ class MapNodes
 
     void fillSecondFloorNodes()
     {
+        secondFloor.put("START", new Node(7980, 3580));
+        secondFloor.put("A21", new Node(7130, 5633));
+        secondFloor.put("A22", new Node(7521, 4403));
+        secondFloor.put("A23", new Node(7636, 3850));
+        secondFloor.put("A24", new Node(8443, 3606));
+        secondFloor.put("A25", new Node(9433, 3353));
+
+        secondFloor.put("B21", new Node(3657, 5656));
+        secondFloor.put("B22", new Node(5670, 5610));
+        secondFloor.put("B23", new Node(5660, 4449));
+        secondFloor.put("B24", new Node(4670, 3859));
+
+        secondFloor.put("C21", new Node(4081, 3145));
+        secondFloor.put("C22", new Node(3933, 3422));
+        secondFloor.put("C23", new Node(2625, 5679));
+
+        secondFloor.put("D21", new Node(3215, 3021));
+        secondFloor.put("D22", new Node(2418, 2570));
+        secondFloor.put("D23", new Node(1243, 4596));
+        secondFloor.put("D24", new Node(690, 5619));
+        secondFloor.put("D25", new Node(1648, 5656));
+
+        secondFloor.put("F21", new Node(5596, 594));
+        secondFloor.put("F22", new Node(4629, 2215));
+
+        secondFloor.put("G21", new Node(9110, 686));
+        secondFloor.put("G22", new Node(6485, 663));
+
+        secondFloor.put("H21", new Node(9456, 2630));
+        secondFloor.put("H22", new Node(9479, 994));
+
+
+        secondFloor.put("K21", new Node(9318, 810));
+        secondFloor.put("K22", new Node(6199, 649));
+        secondFloor.put("K23", new Node(4338, 3675));
+        secondFloor.put("K24", new Node(3256, 5619));
 
     }
 
@@ -134,6 +172,19 @@ public class PathFinder
                     + Math.pow(firstNode.getY() - secondNode.getY(), 2));
     }
 
+    public Node getNodeFromLevelMapNode(String nodeName, Level level) {
+        switch (level) {
+            case ZERO:
+                return getNodeFromGroundFloorMapNodes(nodeName);
+            case ONE:
+                return getNodeFromFirstFloorMapNodes(nodeName);
+            case TWO:
+                return getNodeFromSecondFloorMapNodes(nodeName);
+            default:
+                throw new IllegalArgumentException("Unknown level");
+        }
+    }
+
     Node getNodeFromGroundFloorMapNodes(String nodeName)
     {
         return mapNodes.getGroundFloor().get(nodeName);
@@ -157,6 +208,10 @@ public class PathFinder
     private Character getFloorFromRoomId(String roomId)
     {
             return roomId.charAt(2);
+    }
+
+    private GraphBuilder<String, Integer> setPathBetween(GraphBuilder<String, Integer> graphBuilder, Map<String, Node> nodes, String a, String b) {
+        return graphBuilder.connect(a).to(b).withEdge(getDistanceBetweenPoints(nodes.get(a), nodes.get(b)));
     }
 
     private HipsterGraph<String, Integer> getGroundFloorGraph()
@@ -217,7 +272,40 @@ public class PathFinder
 
     private HipsterGraph<String, Integer> getSecondFloorGraph()
     {
-        return getGroundFloorGraph();
+        GraphBuilder<String, Integer> graphBuilder = GraphBuilder.create();
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "START", "A23");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "A23", "A22");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "A23", "A24");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "A24", "A25");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "A22", "A21");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "A21", "B22");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "B22", "B23");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "B22", "B21");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "B23", "B24");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "B24", "K23");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "B21", "K24");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "K24", "C23");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "C23", "C22");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "C23", "D25");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "C22", "K23");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "C22", "C21");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "C21", "F22");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "D25", "D24");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "D23", "D24");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "D23", "D22");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "D21", "D22");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "D21", "C22");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "F22", "F21");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "K22", "F21");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "K22", "G22");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "G21", "G22");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "G21", "K21");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "H22", "K21");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "H22", "H21");
+        setPathBetween(graphBuilder, mapNodes.getSecondFloor(), "A25", "H21");
+
+
+        return graphBuilder.createUndirectedGraph();
     }
 
     public LinkedList<String> getPathToPoint(String roomId)
