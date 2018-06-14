@@ -3,19 +3,28 @@ package com.grey.virtualfais;
 
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.grey.virtualfais.models.Level;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.MapProvider;
-import com.qozix.tileview.TileView;
 import com.qozix.tileview.hotspots.HotSpot;
 
+import java.util.LinkedList;
+
+import static com.grey.virtualfais.models.Level.getByNumber;
+
 public class MapViewFragment extends TileViewFragment {
-    Level level;
-    MapProvider mapProvider;
+    private Level level;
+    private MapProvider mapProvider;
+    private PathFinder pathFinder = new PathFinder();
+    private PathDrawer pathDrawer;
+    private Room selectedRoom;
+    private int targetX, targetY;
 
     public void setLevel(Level level){
         if (!this.level.equals(level)) {
@@ -23,6 +32,9 @@ public class MapViewFragment extends TileViewFragment {
             mapProvider.setLevel(level);
             getTileView().setSize(level.getPlanWidth(), level.getPlanHeight());
             forceRedraw();
+            if(selectedRoom != null) {
+                drawPathTo(selectedRoom, false, false);
+            }
         }
     }
 
@@ -36,6 +48,7 @@ public class MapViewFragment extends TileViewFragment {
         super.setArguments(args);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void setupViews() {
         level = (Level) getArguments().get("level");
@@ -49,10 +62,10 @@ public class MapViewFragment extends TileViewFragment {
 
         setupTileView();
 
-        PathDrawer pathDrawer = new PathDrawer(tileView);
+        pathDrawer = new PathDrawer(tileView);
         HotSpot hotSpot = new HotSpot();
         hotSpot.set(new Rect(0, 0, level.getPlanWidth(), level.getPlanHeight()));
-        hotSpot.setHotSpotTapListener((hotSpot1, x, y) -> drawPath(tileView, detectClick, pathDrawer, x, y));
+        hotSpot.setHotSpotTapListener((hotSpot1, x, y) -> handleClick(detectClick, x, y));
 
         tileView.addHotSpot(hotSpot);
     }
@@ -88,27 +101,73 @@ public class MapViewFragment extends TileViewFragment {
         tileView.setShouldLoopScale(false);
     }
 
-    private void drawPath(TileView tileView, DetectClick detectClick, PathDrawer pathDrawer, int x, int y) {
+    public void drawPathTo(Room room, boolean isPopoutNeeded, boolean isTriggeredBySearch){
+        selectedRoom = room;
+        pathDrawer.clearPath();
+
+        if (selectedRoom != null)
+        {
+            Log.d("HotSpotTapped", "With access through the tag API to the Activity " + room.getId());
+            if(isPopoutNeeded)
+            {
+                Intent i = new Intent(getActivity(), PopupActivity.class);
+                i.putExtra("room_id", room.getId());
+                startActivity(i);
+            }
+
+            if((   getByNumber(selectedRoom.getFloor()) == Level.ZERO)
+                && (level != Level.ZERO))
+            {
+                selectedRoom = null;
+                targetX = 0;
+                targetY = 0;
+                return;
+            }
+
+            boolean isOtherFloor = (getByNumber(selectedRoom.getFloor()) != level);
+
+            if(isTriggeredBySearch)
+            {
+                String roomWithSegmentId = "" + pathFinder.getSegmentFromRoomId(selectedRoom.getId()) + selectedRoom.getFloor() + "1";
+                Node node = pathFinder.getNodeFromLevelMapNode(roomWithSegmentId, level);
+                targetX = node.getX();
+                targetY = node.getY();
+            }
+
+            LinkedList<String> resultList = pathFinder.getPathToPoint(level, isOtherFloor, targetX, targetY);
+            Node nodeTmp = pathFinder.getNodeFromLevelMapNode(resultList.get(0), level);
+            pathDrawer.newPath(nodeTmp.getX(), nodeTmp.getY());
+            for (String nodeName : resultList)
+            {
+                if(nodeName.equals(resultList.get(0)))
+                {
+                    continue;
+                }
+                nodeTmp = pathFinder.getNodeFromLevelMapNode(nodeName, level);
+                pathDrawer.nextPoint(nodeTmp.getX(), nodeTmp.getY());
+            }
+            if(!isOtherFloor)
+            {
+                pathDrawer.nextPoint(targetX, targetY);
+            }
+            pathDrawer.endPath();
+        }
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void handleClick(DetectClick detectClick, int x, int y) {
         Log.d("HotSpot", "X/Y " + x + " " + y);
         int scaledX = (int) (x / tileView.getScale());
         int scaledY = (int) (y / tileView.getScale());
         Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
-        Room r = detectClick.getClosestRoom(scaledX, scaledY, level);
-        pathDrawer.clearPath();
-        if (r != null) {
-            Log.d("HotSpotTapped", "With access through the tag API to the Activity " + r.getId());
-            Intent i = new Intent(getActivity(), PopupActivity.class);
-            i.putExtra("room_id", r.getId());
-            startActivity(i);
-            pathDrawer.newPath(8489, 4811);
-            pathDrawer.nextPoint(7670, 5527);
-            pathDrawer.nextPoint(7013, 5669);
-            pathDrawer.nextPoint(6199, 4049);
-            pathDrawer.nextPoint(3891, 2424);
-            pathDrawer.nextPoint(4129, 1732);
-            pathDrawer.nextPoint(2759, 761);
-            pathDrawer.endPath();
+        Room clickedRoom = detectClick.getClosestRoom(scaledX, scaledY, level);
+        if(clickedRoom != null)
+        {
+            targetX = scaledX;
+            targetY = scaledY;
         }
+        drawPathTo(clickedRoom, true, false);
     }
 
 

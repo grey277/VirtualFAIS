@@ -19,6 +19,19 @@ public enum Level {
         this.maskId = maskId;
     }
 
+    public static Level getByNumber(int number) {
+        switch (number) {
+            case 0:
+                return Level.ZERO;
+            case 1:
+                return Level.ONE;
+            case 2:
+                return Level.TWO;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
     public static Level getByButtonId(int buttonId) {
         switch (buttonId) {
             case R.id.level_one:
@@ -28,7 +41,7 @@ public enum Level {
             case R.id.level_three:
                 return Level.TWO;
             default:
-                throw new IllegalStateException("");
+                throw new IllegalStateException();
         }
     }
 

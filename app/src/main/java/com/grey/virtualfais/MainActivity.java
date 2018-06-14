@@ -236,7 +236,15 @@ public class MainActivity extends BaseActivity {
                     roomId -> {
                         Room room = appDatabase.roomDao().getByRoomId(roomId);
 
-                        //TODO: implement here jumping to map view with path to the room
+                        onBackPressed();
+
+                        FragmentManager fm = getSupportFragmentManager();
+                        Fragment content = fm.findFragmentById(R.id.content);
+
+                        if (content instanceof MapViewFragment) {
+                            ((MapViewFragment) content).drawPathTo(room, true, true);
+                        }
+
                         Log.i("Search handler", "Found " + room.getId() + " Color(" + room.getColorRed() + ", " + room.getColorGreen() + ", " + room.getColorGreen() + ")");
                     }
             ), SearchFragment.TAG, true);

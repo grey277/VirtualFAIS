@@ -30,8 +30,7 @@ public class DetectClick {
         loadMask(level.getMaskId());
     }
 
-    private Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                   int reqWidth, int reqHeight) {
+    private Bitmap decodeSampledBitmapFromResource(Resources res, int resId) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -39,33 +38,16 @@ public class DetectClick {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(res, resId, options);
 
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inSampleSize = 8;
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        options.inDither = true;
 
         return BitmapFactory.decodeResource(res, resId, options);
     }
 
-    private int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
 
     private int getColor(int x, int y) {
         int rescaledX = Math.round(x * maskWidthScale);
@@ -75,7 +57,7 @@ public class DetectClick {
     }
 
     private void loadMask(int drawableID) {
-        mask = decodeSampledBitmapFromResource(res, drawableID, level.getPlanWidth() / 2, level.getPlanHeight() / 2);
+        mask = decodeSampledBitmapFromResource(res, drawableID);
         final int height = mask.getHeight();
         final int width = mask.getWidth();
         Log.d("DetectClick", "Height: " + height + " width: " + width);
@@ -94,7 +76,7 @@ public class DetectClick {
 
     public Room getClosestRoom(int x, int y, int minDiff) {
         int color = getColor(x, y);
-        Log.d("DetectClick", "Clicked on color: " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " x/y: " + x + " " + y);
+        Log.d("DetectClick", "Clicked on color: " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " x/y: " + x + ", " + y);
         return roomDao.getByColor(Color.red(color), Color.green(color), Color.blue(color), minDiff);
     }
 
