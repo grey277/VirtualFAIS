@@ -36,16 +36,9 @@ public class UpdateDatabase {
 
     private static void checkDatabase() {
         Lastupdate lastupdate = lastupdateDao.get();
-        if (lastupdate != null) {
-            if (lastupdate.getUpdateID() != updateID) {
-                roomDao.deleteAllRecords();
-                employeeDao.deleteAllRecords();
-                insertRooms();
-                insertEmployees();
-            }
-        } else {
-            Lastupdate last = new Lastupdate(updateID);
-            lastupdateDao.insert(last);
+        if(lastupdate == null || lastupdate.getUpdateID() != updateID) {
+            roomDao.deleteAllRecords();
+            employeeDao.deleteAllRecords();
             insertRooms();
             insertEmployees();
         }
