@@ -19,7 +19,7 @@ public class UpdateDatabase {
     private static EmployeeDao employeeDao;
     private static LastupdateDao lastupdateDao;
 
-    private static final long updateID = 1233215596L;
+    private static final long updateID = 1;
 
     private UpdateDatabase(Context context) {
     }
@@ -37,7 +37,7 @@ public class UpdateDatabase {
     private static void checkDatabase() {
         Lastupdate lastupdate = lastupdateDao.get();
         if (lastupdate != null) {
-            if (lastupdate.getId() != updateID) {
+            if (lastupdate.getUpdateID() != updateID) {
                 roomDao.deleteAllRecords();
                 employeeDao.deleteAllRecords();
                 insertRooms();
