@@ -38,7 +38,7 @@ public class DetectClick {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(res, resId, options);
 
-        options.inSampleSize = 32;
+        options.inSampleSize = 8;
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;

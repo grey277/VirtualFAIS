@@ -16,12 +16,15 @@ import com.qozix.tileview.hotspots.HotSpot;
 
 import java.util.LinkedList;
 
+import static com.grey.virtualfais.models.Level.getByNumber;
+
 public class MapViewFragment extends TileViewFragment {
     private Level level;
     private MapProvider mapProvider;
     private PathFinder pathFinder = new PathFinder();
     private PathDrawer pathDrawer;
     private Room selectedRoom;
+    private int targetX, targetY;
 
     public void setLevel(Level level){
         if (!this.level.equals(level)) {
@@ -30,7 +33,7 @@ public class MapViewFragment extends TileViewFragment {
             getTileView().setSize(level.getPlanWidth(), level.getPlanHeight());
             forceRedraw();
             if(selectedRoom != null) {
-                drawPathTo(selectedRoom, false);
+                drawPathTo(selectedRoom, false, false);
             }
         }
     }
@@ -98,32 +101,56 @@ public class MapViewFragment extends TileViewFragment {
         tileView.setShouldLoopScale(false);
     }
 
-    public void drawPathTo(Room room, boolean isPopoutNeeded){
+    public void drawPathTo(Room room, boolean isPopoutNeeded, boolean isTriggeredBySearch){
         selectedRoom = room;
         pathDrawer.clearPath();
 
-        if (room != null) {
+        if (selectedRoom != null)
+        {
             Log.d("HotSpotTapped", "With access through the tag API to the Activity " + room.getId());
-            if(isPopoutNeeded) {
+            if(isPopoutNeeded)
+            {
                 Intent i = new Intent(getActivity(), PopupActivity.class);
                 i.putExtra("room_id", room.getId());
                 startActivity(i);
-
-                LinkedList<String> resultList = pathFinder.getPathToPoint(room.getId());
-                for (String nodeName : resultList)
-                {
-                    Node nodeTmp = pathFinder.getNodeFromLevelMapNode(nodeName, level);
-                    if("START".equals(nodeName))
-                    {
-                        pathDrawer.newPath(nodeTmp.getX(), nodeTmp.getY());
-                    }
-                    else
-                    {
-                        pathDrawer.nextPoint(nodeTmp.getX(), nodeTmp.getY());
-                    }
-                }
-                pathDrawer.endPath();
             }
+
+            if((   getByNumber(selectedRoom.getFloor()) == Level.ZERO)
+                && (level != Level.ZERO))
+            {
+                selectedRoom = null;
+                targetX = 0;
+                targetY = 0;
+                return;
+            }
+
+            boolean isOtherFloor = (getByNumber(selectedRoom.getFloor()) != level);
+
+            if(isTriggeredBySearch)
+            {
+                String roomWithSegmentId = "" + pathFinder.getSegmentFromRoomId(selectedRoom.getId()) + selectedRoom.getFloor() + "1";
+                Node node = pathFinder.getNodeFromLevelMapNode(roomWithSegmentId, level);
+                targetX = node.getX();
+                targetY = node.getY();
+            }
+
+            LinkedList<String> resultList = pathFinder.getPathToPoint(level, isOtherFloor, targetX, targetY);
+            Node nodeTmp = pathFinder.getNodeFromLevelMapNode(resultList.get(0), level);
+            pathDrawer.newPath(nodeTmp.getX(), nodeTmp.getY());
+            for (String nodeName : resultList)
+            {
+                if(nodeName.equals(resultList.get(0)))
+                {
+                    continue;
+                }
+                nodeTmp = pathFinder.getNodeFromLevelMapNode(nodeName, level);
+                pathDrawer.nextPoint(nodeTmp.getX(), nodeTmp.getY());
+            }
+            if(!isOtherFloor)
+            {
+                pathDrawer.nextPoint(targetX, targetY);
+            }
+            pathDrawer.endPath();
         }
     }
 
@@ -135,8 +162,12 @@ public class MapViewFragment extends TileViewFragment {
         int scaledY = (int) (y / tileView.getScale());
         Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
         Room clickedRoom = detectClick.getClosestRoom(scaledX, scaledY, level);
-        drawPathTo(clickedRoom, true);
-
+        if(clickedRoom != null)
+        {
+            targetX = scaledX;
+            targetY = scaledY;
+        }
+        drawPathTo(clickedRoom, true, false);
     }
 
 
