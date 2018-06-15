@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.grey.virtualfais.daos.EmployeeDao;
@@ -24,6 +26,7 @@ public class PopupActivity extends Activity {
 
     static private RoomDao roomDao;
     static private EmployeeDao employeeDao;
+    ImageButton closeBtn;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -38,7 +41,16 @@ public class PopupActivity extends Activity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width * .75), (int) (height * .70));
+        getWindow().setLayout((int) (width * .75), (int) (height * .45));
+
+        // close button handler
+        closeBtn = findViewById(R.id.ib_close);
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupActivity.this.finish();
+            }
+        });
 
         String room_id = getIntent().getStringExtra("room_id");
         AppDatabase appDatabase = AppDatabase.getInstance(this);
@@ -51,7 +63,6 @@ public class PopupActivity extends Activity {
         TextView employeesTextField = findViewById(R.id.employees_popup);
 
         roomNumberTextField.setText(room.getId());
-
 
 
         employeeDao = appDatabase.employeeDao();
@@ -73,9 +84,5 @@ public class PopupActivity extends Activity {
             findViewById(R.id.phone_label).setVisibility(View.GONE);
             phoneTextField.setVisibility(View.GONE);
         }
-
-
-
-
     }
 }
