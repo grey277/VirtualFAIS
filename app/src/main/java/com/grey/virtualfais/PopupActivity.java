@@ -41,15 +41,12 @@ public class PopupActivity extends Activity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width * .75), (int) (height * .45));
+        getWindow().setLayout((int) (width * .75), (int) (height * .50));
 
         // close button handler
         closeBtn = findViewById(R.id.ib_close);
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupActivity.this.finish();
-            }
+        closeBtn.setOnClickListener((View v) -> {
+            PopupActivity.this.finish();
         });
 
         String room_id = getIntent().getStringExtra("room_id");
@@ -72,8 +69,17 @@ public class PopupActivity extends Activity {
             Set<String> fullNamesSet = new HashSet<>();
             Set<String> telephonesSet = new HashSet<>();
             for (Employee e : employeesList) {
-                fullNamesSet.add(e.getName().getFirstName() + " " + e.getName().getLastName());
-                telephonesSet.add(e.getTelephone());
+
+                String fullName = (e.getName().getFirstName() + " " + e.getName().getLastName()).trim();
+                String telephone = (e.getTelephone()).replaceAll("\\s+", "");
+
+                if (fullName != null && fullName.length() > 0) {
+                    fullNamesSet.add(fullName);
+                }
+
+                if (telephone != null && telephone.length() > 8) {
+                    telephonesSet.add(telephone);
+                }
             }
             employeesTextField.setText(String.join(", ", fullNamesSet));
             phoneTextField.setText(String.join(", ", telephonesSet));
