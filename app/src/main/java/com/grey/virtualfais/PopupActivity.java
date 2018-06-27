@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.grey.virtualfais.daos.EmployeeDao;
@@ -24,6 +26,7 @@ public class PopupActivity extends Activity {
 
     static private RoomDao roomDao;
     static private EmployeeDao employeeDao;
+    ImageButton closeBtn;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -38,7 +41,13 @@ public class PopupActivity extends Activity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width * .75), (int) (height * .70));
+        getWindow().setLayout((int) (width * .75), (int) (height * .50));
+
+        // close button handler
+        closeBtn = findViewById(R.id.ib_close);
+        closeBtn.setOnClickListener((View v) -> {
+            PopupActivity.this.finish();
+        });
 
         String room_id = getIntent().getStringExtra("room_id");
         AppDatabase appDatabase = AppDatabase.getInstance(this);
@@ -53,7 +62,6 @@ public class PopupActivity extends Activity {
         roomNumberTextField.setText(room.getId());
 
 
-
         employeeDao = appDatabase.employeeDao();
         List<Employee> employeesList = employeeDao.getEmployeesByRoomId(room_id);
 
@@ -61,8 +69,17 @@ public class PopupActivity extends Activity {
             Set<String> fullNamesSet = new HashSet<>();
             Set<String> telephonesSet = new HashSet<>();
             for (Employee e : employeesList) {
-                fullNamesSet.add(e.getName().getFirstName() + " " + e.getName().getLastName());
-                telephonesSet.add(e.getTelephone());
+
+                String fullName = (e.getName().getFirstName() + " " + e.getName().getLastName()).trim();
+                String telephone = (e.getTelephone()).replaceAll("\\s+", "");
+
+                if (fullName != null && fullName.length() > 0) {
+                    fullNamesSet.add(fullName);
+                }
+
+                if (telephone != null && telephone.length() > 8) {
+                    telephonesSet.add(telephone);
+                }
             }
             employeesTextField.setText(String.join(", ", fullNamesSet));
             phoneTextField.setText(String.join(", ", telephonesSet));
@@ -73,9 +90,5 @@ public class PopupActivity extends Activity {
             findViewById(R.id.phone_label).setVisibility(View.GONE);
             phoneTextField.setVisibility(View.GONE);
         }
-
-
-
-
     }
 }
