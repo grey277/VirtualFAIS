@@ -3,20 +3,20 @@ package com.grey.virtualfais.models;
 import com.grey.virtualfais.R;
 
 public enum Level {
-    ZERO("parter/image", 9963, 6409, R.drawable.maska_parter),
-    ONE("Ipietro/image", 9968, 6622, R.drawable.pietro_1_maska),
-    TWO("2pietro/image", 9964, 6619, R.drawable.pietro_2_maska);
+    ZERO("parter/image", 9963, 6409, 0),
+    ONE("Ipietro/image", 9968, 6622, 1),
+    TWO("2pietro/image", 9964, 6619, 2);
 
     private String path;
     private int planWidth;
     private int planHeight;
-    private int maskId;
+    private int id;
 
-    Level(String path, int planWidth, int planHeight, int maskId) {
+    Level(String path, int planWidth, int planHeight, int id) {
         this.path = path;
         this.planWidth = planWidth;
         this.planHeight = planHeight;
-        this.maskId = maskId;
+        this.id = id;
     }
 
     public static Level getByNumber(int number) {
@@ -58,7 +58,7 @@ public enum Level {
         return planHeight;
     }
 
-    public int getMaskId() {
-        return maskId;
+    public int getId() {
+        return id;
     }
 }

@@ -1,6 +1,7 @@
 package com.grey.virtualfais;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,66 +13,57 @@ import com.grey.virtualfais.models.Level;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.AppDatabase;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class DetectClick {
 
     private Bitmap mask;
     private Level level;
-    private float maskHeightScale = 1.f;
-    private float maskWidthScale = 1.f;
 
     private RoomDao roomDao;
-    private Resources res;
+
+    private final int maskSplitNumber = 256;
+    private final int minimumDifferenceInColor = 8;
+    private AssetManager assetManager;
+
+    private int levelValue = 1;
 
     DetectClick(Resources res, Context context, Level level) {
-        this.res = res;
         this.level = level;
         AppDatabase appDatabase = AppDatabase.getInstance(context);
         roomDao = appDatabase.roomDao();
-        loadMask(level.getMaskId());
+        assetManager = context.getAssets();
     }
 
-    private Bitmap decodeSampledBitmapFromResource(Resources res, int resId) {
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
-
-        options.inSampleSize = 8;
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        options.inDither = true;
-
-        return BitmapFactory.decodeResource(res, resId, options);
+    private void loadCorrectBitmap(int x, int y) {
+        int xFloor = (int) Math.floor(x / maskSplitNumber);
+        int multi = (int) Math.ceil(level.getPlanWidth() / maskSplitNumber) + 1; // images are from 0
+        int yFloor = (int) Math.floor(y / maskSplitNumber);
+        int bitmapNumber = (xFloor) + ((multi) *  yFloor);
+        try {
+            InputStream inputStream = assetManager.open("mask_floor_" + (levelValue - 1) + "/mask_"+ levelValue+"_" + bitmapNumber + ".png");
+            mask = BitmapFactory.decodeStream(inputStream);
+        } catch (IOException e) {}
     }
 
 
     private int getColor(int x, int y) {
-        int rescaledX = Math.round(x * maskWidthScale);
-        int rescaledY = Math.round(y * maskHeightScale);
-        Log.d("getColor", "Rescaled X/Y: " + rescaledX + " " + rescaledY + " Scales X/Y: " + maskWidthScale + " " + maskHeightScale);
-        return mask.getPixel(rescaledX, rescaledY);
+        loadCorrectBitmap(x, y);
+        int xMod = x % maskSplitNumber;
+        int yMod = y % maskSplitNumber;
+        return mask.getPixel(xMod, yMod);
     }
 
-    private void loadMask(int drawableID) {
-        mask = decodeSampledBitmapFromResource(res, drawableID);
-        final int height = mask.getHeight();
-        final int width = mask.getWidth();
-        Log.d("DetectClick", "Height: " + height + " width: " + width);
-        maskWidthScale = (float) width / (float) level.getPlanWidth();
-        maskHeightScale = (float) height / (float) level.getPlanHeight();
+    private void switchLevel(Level level) {
+        switch(level.getId()) {
+            case 0: levelValue = 1; break;
+            case 1: levelValue = 2; break;
+            case 2: levelValue = 3; break;
+            default: levelValue = 1; break;
 
-    }
-
-    private void changeLayerIfNeeded(Level level) {
-        if (!this.level.equals(level)) {
-            mask.recycle();
-            loadMask(level.getMaskId());
-            this.level = level;
         }
+        this.level = level;
     }
 
     public Room getClosestRoom(int x, int y, int minDiff) {
@@ -81,8 +73,7 @@ public class DetectClick {
     }
 
     public Room getClosestRoom(int x, int y, Level level) {
-        changeLayerIfNeeded(level);
-        final int minimumDifferenceInColor = 8;
+        switchLevel(level);
         return getClosestRoom(x, y, minimumDifferenceInColor);
     }
 
