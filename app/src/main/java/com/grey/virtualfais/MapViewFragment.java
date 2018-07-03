@@ -115,7 +115,7 @@ public class MapViewFragment extends TileViewFragment {
             }
 
             if((   getByNumber(selectedRoom.getFloor()) == Level.ZERO)
-                && (level != Level.ZERO))
+                    && (level != Level.ZERO))
             {
                 selectedRoom = null;
                 targetX = 0;
@@ -125,24 +125,34 @@ public class MapViewFragment extends TileViewFragment {
 
             boolean isOtherFloor = (getByNumber(selectedRoom.getFloor()) != level);
 
-            LinkedList<String> resultList = pathFinder.getPathToPoint(level, selectedRoom.getId(), isOtherFloor);
-            if(resultList.size() > 0)
+            if(isTriggeredBySearch)
             {
-                Node nodeTmp = pathFinder.getNodeFromLevelMapNode(resultList.get(0), level);
-                pathDrawer.newPath(nodeTmp.getX(), nodeTmp.getY());
-                for (String nodeName : resultList)
-                {
-                    if (nodeName.equals(resultList.get(0)))
-                    {
-                        continue;
-                    }
-                    nodeTmp = pathFinder.getNodeFromLevelMapNode(nodeName, level);
-                    pathDrawer.nextPoint(nodeTmp.getX(), nodeTmp.getY());
-                }
-                pathDrawer.endPath();
+                String roomWithSegmentId = "" + pathFinder.getSegmentFromRoomId(selectedRoom.getId()) + selectedRoom.getFloor() + "1";
+                Node node = pathFinder.getNodeFromLevelMapNode(roomWithSegmentId, level);
+                targetX = node.getX();
+                targetY = node.getY();
             }
+
+            LinkedList<String> resultList = pathFinder.getPathToPoint(level, isOtherFloor, targetX, targetY);
+            Node nodeTmp = pathFinder.getNodeFromLevelMapNode(resultList.get(0), level);
+            pathDrawer.newPath(nodeTmp.getX(), nodeTmp.getY());
+            for (String nodeName : resultList)
+            {
+                if(nodeName.equals(resultList.get(0)))
+                {
+                    continue;
+                }
+                nodeTmp = pathFinder.getNodeFromLevelMapNode(nodeName, level);
+                pathDrawer.nextPoint(nodeTmp.getX(), nodeTmp.getY());
+            }
+            if(!isOtherFloor)
+            {
+                pathDrawer.nextPoint(targetX, targetY);
+            }
+            pathDrawer.endPath();
         }
     }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)

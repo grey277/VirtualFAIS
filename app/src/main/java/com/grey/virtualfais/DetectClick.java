@@ -27,8 +27,6 @@ public class DetectClick {
     static private final int MINIMUM_DIFFERENCE_IN_COLOR = 8;
     private AssetManager assetManager;
 
-    private int levelValue = 1;
-
     DetectClick(Context context, Level level) {
         this.level = level;
         AppDatabase appDatabase = AppDatabase.getInstance(context);
@@ -42,10 +40,10 @@ public class DetectClick {
         int yFloor = y / MASK_SPLIT_NUMBER;
         int bitmapNumber = (xFloor) + ((multi) *  yFloor);
         try {
-            InputStream inputStream = assetManager.open("mask_floor_" + (levelValue - 1) + "/mask_"+ levelValue+"_" + bitmapNumber + ".png");
+            InputStream inputStream = assetManager.open("mask_floor_" + level.getId() + "/mask_" + bitmapNumber + ".png");
             mask = BitmapFactory.decodeStream(inputStream);
         } catch (IOException e) {
-            Log.d("DetectClick", "Cant find image: " + "mask_floor_" + (levelValue - 1) + "/mask_"+ levelValue+"_" + bitmapNumber + ".png");
+            Log.d("DetectClick", "Cant find image: " + "mask_floor_" + level.getId() + "/mask_" + bitmapNumber + ".png");
         }
     }
 
@@ -57,11 +55,6 @@ public class DetectClick {
         return mask.getPixel(xMod, yMod);
     }
 
-    private void switchLevel(Level level) {
-        levelValue = level.getId() + 1;
-        this.level = level;
-    }
-
     public Room getClosestRoom(int x, int y, int minDiff) {
         int color = getColor(x, y);
         Log.d("DetectClick", "Clicked on color: " + Color.red(color) + " " + Color.green(color) + " " + Color.blue(color) + " x/y: " + x + ", " + y);
@@ -69,7 +62,7 @@ public class DetectClick {
     }
 
     public Room getClosestRoom(int x, int y, Level level) {
-        switchLevel(level);
+        this.level = level;
         return getClosestRoom(x, y, MINIMUM_DIFFERENCE_IN_COLOR);
     }
 
