@@ -55,7 +55,6 @@ public class MapViewFragment extends TileViewFragment {
         mapProvider = new MapProvider(level);
 
         DetectClick detectClick = new DetectClick (
-                getResources(),
                 getContext(),
                 level
         );
@@ -126,31 +125,22 @@ public class MapViewFragment extends TileViewFragment {
 
             boolean isOtherFloor = (getByNumber(selectedRoom.getFloor()) != level);
 
-            if(isTriggeredBySearch)
+            LinkedList<String> resultList = pathFinder.getPathToPoint(level, selectedRoom.getId(), isOtherFloor);
+            if(resultList.size() > 0)
             {
-                String roomWithSegmentId = "" + pathFinder.getSegmentFromRoomId(selectedRoom.getId()) + selectedRoom.getFloor() + "1";
-                Node node = pathFinder.getNodeFromLevelMapNode(roomWithSegmentId, level);
-                targetX = node.getX();
-                targetY = node.getY();
-            }
-
-            LinkedList<String> resultList = pathFinder.getPathToPoint(level, isOtherFloor, targetX, targetY);
-            Node nodeTmp = pathFinder.getNodeFromLevelMapNode(resultList.get(0), level);
-            pathDrawer.newPath(nodeTmp.getX(), nodeTmp.getY());
-            for (String nodeName : resultList)
-            {
-                if(nodeName.equals(resultList.get(0)))
+                Node nodeTmp = pathFinder.getNodeFromLevelMapNode(resultList.get(0), level);
+                pathDrawer.newPath(nodeTmp.getX(), nodeTmp.getY());
+                for (String nodeName : resultList)
                 {
-                    continue;
+                    if (nodeName.equals(resultList.get(0)))
+                    {
+                        continue;
+                    }
+                    nodeTmp = pathFinder.getNodeFromLevelMapNode(nodeName, level);
+                    pathDrawer.nextPoint(nodeTmp.getX(), nodeTmp.getY());
                 }
-                nodeTmp = pathFinder.getNodeFromLevelMapNode(nodeName, level);
-                pathDrawer.nextPoint(nodeTmp.getX(), nodeTmp.getY());
+                pathDrawer.endPath();
             }
-            if(!isOtherFloor)
-            {
-                pathDrawer.nextPoint(targetX, targetY);
-            }
-            pathDrawer.endPath();
         }
     }
 
@@ -162,6 +152,7 @@ public class MapViewFragment extends TileViewFragment {
         int scaledY = (int) (y / tileView.getScale());
         Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
         Room clickedRoom = detectClick.getClosestRoom(scaledX, scaledY, level);
+
         if(clickedRoom != null)
         {
             targetX = scaledX;

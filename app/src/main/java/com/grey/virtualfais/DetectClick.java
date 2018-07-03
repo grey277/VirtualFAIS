@@ -23,13 +23,13 @@ public class DetectClick {
 
     private RoomDao roomDao;
 
-    private final int maskSplitNumber = 256;
-    private final int minimumDifferenceInColor = 8;
+    static private final int MASK_SPLIT_NUMBER = 256;
+    static private final int MINIMUM_DIFFERENCE_IN_COLOR = 8;
     private AssetManager assetManager;
 
     private int levelValue = 1;
 
-    DetectClick(Resources res, Context context, Level level) {
+    DetectClick(Context context, Level level) {
         this.level = level;
         AppDatabase appDatabase = AppDatabase.getInstance(context);
         roomDao = appDatabase.roomDao();
@@ -37,32 +37,28 @@ public class DetectClick {
     }
 
     private void loadCorrectBitmap(int x, int y) {
-        int xFloor = (int) Math.floor(x / maskSplitNumber);
-        int multi = (int) Math.ceil(level.getPlanWidth() / maskSplitNumber) + 1; // images are from 0
-        int yFloor = (int) Math.floor(y / maskSplitNumber);
+        int xFloor = x / MASK_SPLIT_NUMBER;
+        int multi = level.getPlanWidth() / MASK_SPLIT_NUMBER + 1; // images are from 0
+        int yFloor = y / MASK_SPLIT_NUMBER;
         int bitmapNumber = (xFloor) + ((multi) *  yFloor);
         try {
             InputStream inputStream = assetManager.open("mask_floor_" + (levelValue - 1) + "/mask_"+ levelValue+"_" + bitmapNumber + ".png");
             mask = BitmapFactory.decodeStream(inputStream);
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            Log.d("DetectClick", "Cant find image: " + "mask_floor_" + (levelValue - 1) + "/mask_"+ levelValue+"_" + bitmapNumber + ".png");
+        }
     }
 
 
     private int getColor(int x, int y) {
         loadCorrectBitmap(x, y);
-        int xMod = x % maskSplitNumber;
-        int yMod = y % maskSplitNumber;
+        int xMod = x % MASK_SPLIT_NUMBER;
+        int yMod = y % MASK_SPLIT_NUMBER;
         return mask.getPixel(xMod, yMod);
     }
 
     private void switchLevel(Level level) {
-        switch(level.getId()) {
-            case 0: levelValue = 1; break;
-            case 1: levelValue = 2; break;
-            case 2: levelValue = 3; break;
-            default: levelValue = 1; break;
-
-        }
+        levelValue = level.getId() + 1;
         this.level = level;
     }
 
@@ -74,7 +70,7 @@ public class DetectClick {
 
     public Room getClosestRoom(int x, int y, Level level) {
         switchLevel(level);
-        return getClosestRoom(x, y, minimumDifferenceInColor);
+        return getClosestRoom(x, y, MINIMUM_DIFFERENCE_IN_COLOR);
     }
 
 }
