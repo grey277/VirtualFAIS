@@ -55,7 +55,6 @@ public class MapViewFragment extends TileViewFragment {
         mapProvider = new MapProvider(level);
 
         DetectClick detectClick = new DetectClick (
-                getResources(),
                 getContext(),
                 level
         );
@@ -116,7 +115,7 @@ public class MapViewFragment extends TileViewFragment {
             }
 
             if((   getByNumber(selectedRoom.getFloor()) == Level.ZERO)
-                && (level != Level.ZERO))
+                    && (level != Level.ZERO))
             {
                 selectedRoom = null;
                 targetX = 0;
@@ -155,6 +154,7 @@ public class MapViewFragment extends TileViewFragment {
     }
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void handleClick(DetectClick detectClick, int x, int y) {
         Log.d("HotSpot", "X/Y " + x + " " + y);
@@ -162,6 +162,7 @@ public class MapViewFragment extends TileViewFragment {
         int scaledY = (int) (y / tileView.getScale());
         Log.d("HotSpot", "Scaled X/Y " + scaledX + " " + scaledY + " Scale: " + tileView.getScale());
         Room clickedRoom = detectClick.getClosestRoom(scaledX, scaledY, level);
+
         if(clickedRoom != null)
         {
             targetX = scaledX;

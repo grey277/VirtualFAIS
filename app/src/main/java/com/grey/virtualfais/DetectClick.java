@@ -1,6 +1,7 @@
 package com.grey.virtualfais;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,66 +13,46 @@ import com.grey.virtualfais.models.Level;
 import com.grey.virtualfais.models.Room;
 import com.grey.virtualfais.services.AppDatabase;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class DetectClick {
 
     private Bitmap mask;
     private Level level;
-    private float maskHeightScale = 1.f;
-    private float maskWidthScale = 1.f;
 
     private RoomDao roomDao;
-    private Resources res;
 
-    DetectClick(Resources res, Context context, Level level) {
-        this.res = res;
+    static private final int MASK_SPLIT_NUMBER = 256;
+    static private final int MINIMUM_DIFFERENCE_IN_COLOR = 8;
+    private AssetManager assetManager;
+
+    DetectClick(Context context, Level level) {
         this.level = level;
         AppDatabase appDatabase = AppDatabase.getInstance(context);
         roomDao = appDatabase.roomDao();
-        loadMask(level.getMaskId());
+        assetManager = context.getAssets();
     }
 
-    private Bitmap decodeSampledBitmapFromResource(Resources res, int resId) {
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
-
-        options.inSampleSize = 8;
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        options.inDither = true;
-
-        return BitmapFactory.decodeResource(res, resId, options);
+    private void loadCorrectBitmap(int x, int y) {
+        int xFloor = x / MASK_SPLIT_NUMBER;
+        int multi = level.getPlanWidth() / MASK_SPLIT_NUMBER + 1; // images are from 0
+        int yFloor = y / MASK_SPLIT_NUMBER;
+        int bitmapNumber = (xFloor) + ((multi) *  yFloor);
+        try {
+            InputStream inputStream = assetManager.open("mask_floor_" + level.getId() + "/mask_" + bitmapNumber + ".png");
+            mask = BitmapFactory.decodeStream(inputStream);
+        } catch (IOException e) {
+            Log.d("DetectClick", "Cant find image: " + "mask_floor_" + level.getId() + "/mask_" + bitmapNumber + ".png");
+        }
     }
 
 
     private int getColor(int x, int y) {
-        int rescaledX = Math.round(x * maskWidthScale);
-        int rescaledY = Math.round(y * maskHeightScale);
-        Log.d("getColor", "Rescaled X/Y: " + rescaledX + " " + rescaledY + " Scales X/Y: " + maskWidthScale + " " + maskHeightScale);
-        return mask.getPixel(rescaledX, rescaledY);
-    }
-
-    private void loadMask(int drawableID) {
-        mask = decodeSampledBitmapFromResource(res, drawableID);
-        final int height = mask.getHeight();
-        final int width = mask.getWidth();
-        Log.d("DetectClick", "Height: " + height + " width: " + width);
-        maskWidthScale = (float) width / (float) level.getPlanWidth();
-        maskHeightScale = (float) height / (float) level.getPlanHeight();
-
-    }
-
-    private void changeLayerIfNeeded(Level level) {
-        if (!this.level.equals(level)) {
-            mask.recycle();
-            loadMask(level.getMaskId());
-            this.level = level;
-        }
+        loadCorrectBitmap(x, y);
+        int xMod = x % MASK_SPLIT_NUMBER;
+        int yMod = y % MASK_SPLIT_NUMBER;
+        return mask.getPixel(xMod, yMod);
     }
 
     public Room getClosestRoom(int x, int y, int minDiff) {
@@ -81,9 +62,8 @@ public class DetectClick {
     }
 
     public Room getClosestRoom(int x, int y, Level level) {
-        changeLayerIfNeeded(level);
-        final int minimumDifferenceInColor = 8;
-        return getClosestRoom(x, y, minimumDifferenceInColor);
+        this.level = level;
+        return getClosestRoom(x, y, MINIMUM_DIFFERENCE_IN_COLOR);
     }
 
 }
