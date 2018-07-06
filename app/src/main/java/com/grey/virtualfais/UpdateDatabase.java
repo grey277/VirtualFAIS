@@ -19,9 +19,9 @@ public class UpdateDatabase {
     private static EmployeeDao employeeDao;
     private static LastupdateDao lastupdateDao;
 
-    private static final long updateID = 2;
+    private static final long updateID = 3;
 
-    private UpdateDatabase(Context context) {
+    private UpdateDatabase() {
     }
 
     public static void apply(Context context) {
@@ -299,7 +299,7 @@ public class UpdateDatabase {
         color = Color.parseColor("#000050");
         roomDao.insert(new Room("J-0-11", 0, Color.red(color), Color.green(color), Color.blue(color)));
         color = Color.parseColor("#000064");
-        roomDao.insert(new Room("J-0-9", 0, Color.red(color), Color.green(color), Color.blue(color)));
+        roomDao.insert(new Room("J-0-09", 0, Color.red(color), Color.green(color), Color.blue(color)));
         color = Color.parseColor("#000078");
         roomDao.insert(new Room("J-0-19", 0, Color.red(color), Color.green(color), Color.blue(color)));
         color = Color.parseColor("#00008c");
