@@ -19,7 +19,7 @@ public class UpdateDatabase {
     private static EmployeeDao employeeDao;
     private static LastupdateDao lastupdateDao;
 
-    private static final long updateID = 1;
+    private static final long updateID = 2;
 
     private UpdateDatabase(Context context) {
     }
@@ -1139,7 +1139,7 @@ public class UpdateDatabase {
         roomDao.insert(new Room("H-2-11", 2, Color.red(color), Color.green(color), Color.blue(color)));
         color = Color.parseColor("#287850");
         roomDao.insert(new Room("H-2-12", 2, Color.red(color), Color.green(color), Color.blue(color)));
-        color = Color.parseColor("#287864");
+        color = Color.parseColor("#2878b4");
         roomDao.insert(new Room("A-2-01", 2, Color.red(color), Color.green(color), Color.blue(color)));
         color = Color.parseColor("#2878c8");
         roomDao.insert(new Room("A-2-02", 2, Color.red(color), Color.green(color), Color.blue(color)));
