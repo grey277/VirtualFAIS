@@ -81,8 +81,19 @@ public class PopupActivity extends Activity {
                     telephonesSet.add(telephone);
                 }
             }
-            employeesTextField.setText(String.join(", ", fullNamesSet));
-            phoneTextField.setText(String.join(", ", telephonesSet));
+            String fullname = "";
+            for(int i = 0; i < fullNamesSet.size() - 1; i++) {
+                fullname += fullNamesSet.toArray()[i] + ",";
+            }
+            fullname += fullNamesSet.toArray()[fullNamesSet.size() -1];
+
+            String telephone = "";
+            for(int i = 0; i < telephonesSet.size() - 1; i++) {
+                telephone += telephonesSet.toArray()[i] + ",";
+            }
+            telephone += telephonesSet.toArray()[telephonesSet.size() -1];
+            employeesTextField.setText(fullname);
+            phoneTextField.setText(telephone);
 
         } else {
             findViewById(R.id.employees_label).setVisibility(View.GONE);
