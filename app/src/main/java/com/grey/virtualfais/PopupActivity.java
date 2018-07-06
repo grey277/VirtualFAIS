@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -20,7 +19,6 @@ import com.grey.virtualfais.services.AppDatabase;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class PopupActivity extends Activity {
 
@@ -81,8 +79,11 @@ public class PopupActivity extends Activity {
                     telephonesSet.add(telephone);
                 }
             }
-            employeesTextField.setText(String.join(", ", fullNamesSet));
-            phoneTextField.setText(String.join(", ", telephonesSet));
+            String names = StringUtils.join(fullNamesSet, ", ");
+            String telephone = StringUtils.join(telephonesSet, ", ");
+
+            employeesTextField.setText(names);
+            phoneTextField.setText(telephone);
 
         } else {
             findViewById(R.id.employees_label).setVisibility(View.GONE);
