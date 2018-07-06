@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -20,7 +19,6 @@ import com.grey.virtualfais.services.AppDatabase;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class PopupActivity extends Activity {
 
@@ -81,18 +79,10 @@ public class PopupActivity extends Activity {
                     telephonesSet.add(telephone);
                 }
             }
-            String fullname = "";
-            for(int i = 0; i < fullNamesSet.size() - 1; i++) {
-                fullname += fullNamesSet.toArray()[i] + ",";
-            }
-            fullname += fullNamesSet.toArray()[fullNamesSet.size() -1];
+            String names = StringUtils.join(fullNamesSet, ", ");
+            String telephone = StringUtils.join(telephonesSet, ", ");
 
-            String telephone = "";
-            for(int i = 0; i < telephonesSet.size() - 1; i++) {
-                telephone += telephonesSet.toArray()[i] + ",";
-            }
-            telephone += telephonesSet.toArray()[telephonesSet.size() -1];
-            employeesTextField.setText(fullname);
+            employeesTextField.setText(names);
             phoneTextField.setText(telephone);
 
         } else {
